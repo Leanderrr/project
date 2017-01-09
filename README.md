@@ -4,8 +4,16 @@
 
 ![](doc/anatomy_of_the_western_dragon_by_katepfeilschiefter.jpg)
 We need to analyse his mighty roar and wing flapping sounds to not get burned to a crisp.
-__                     ______                               -- --- --- ------ -- - -----
+
 ### Problem solved for the user:
+- How high can I sing?
+- How low can I sing?
+- Can I sing what I hear?
+- Can I sing in tune?
+- Do I produce a lot of overtones when I sing?
+- Which notes are being played in the music I hear?
+- What is the difference in sound spectrum when comparing, guitar, flute, piano and cello for example?
+
 
 ### What features will be available to solve the problem.
 
