@@ -116,5 +116,7 @@ That is going to be relatively new. But there are good tutorials on how to do th
 A great example for me is the Real Time Spectro program and other free music software written by Norm Spier: [nasmusicsoft](http://nasmusicsoft.com/Spectratune.php "Norm Spier's site"). 
 RealTimeSpectro also accesses the microphone and implements a row and spiral visualisation for the sound frequency plots. However, his program calculates the frequency power with a spring system simulation, not an FFT.
 
-Another program by Norm Spier, [SpectraTunePlus](http://nasmusicsoft.com/Spectratune.php "SpectraTunePlus info"). http://nasmusicsoft.com/SpectratunePlus.php, is able to load sound files and shows a frequency spectrum history. [SpectraTunePlus](http://nasmusicsoft.com/Spectratune.php "SpectraTunePlus info"). http://nasmusicsoft.com/SpectratunePlus.php has a more intimidating user interface.
+Another program by Norm Spier, [SpectraTunePlus](http://nasmusicsoft.com/Spectratune.php "SpectraTunePlus info"). is able to load sound files and shows a frequency spectrum history. [SpectraTunePlus](http://nasmusicsoft.com/Spectratune.php "SpectraTunePlus info") has a more intimidating user interface.
 Norm Spier has written a lot of helpful theoretical, practical and nice-to-know information on his website. Both on how the program works, and what it shows with the analyses.
+
+[Sonic visualiser](http://sonicvisualiser.org/ "another sound visualizer program") is another program which is a bit similar to my project's program. This program can only handly complete audio files.
