@@ -42,6 +42,7 @@ The best vibrato oscillates 4 times per second, but on average just a bit lower 
 - Option to toggle 'smoothing', an average of several FFTs is plotted instead of the latest one only. This will cause the sounds to disappear slower from the plot 'current'. Maybe with decreasing weight of analysis over time. (New analysis counts more in the plot than older analysis)
 - If there is time to spare: 
 	- A menu to add thicker lines to notes of a requested scale (A minor, A major, B minor...) (These scales mostly use the same specific notes)
+	- Pauze button which stops microphone recording and plot updating.
 	- Cochlea-like view, not with a barlike graph, but with vibrating 'membrane'. Shape resembles cochlea and sounds cause vibrations roughly in the correct place. This will need another slider which amplifies the vibrations.
 		- Vibrations could be calculated with multiple methods: Implemented by a spring system or doing something to the FFT. Real effect of sound on cochlea needs to be investigated more before I can say how to do this for sure.
 	- labels of frequency spectrum plots can be switched from note names to Hz scale with a button.
