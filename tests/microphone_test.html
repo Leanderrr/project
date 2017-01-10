@@ -22,7 +22,16 @@
     if (!navigator.getUserMedia)
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
                           navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
+						  
+	// log the id's and labels of found media devices.
+	navigator.mediaDevices.enumerateDevices()
+	.then(function(devices) {
+	  devices.forEach(function(device) {
+		console.log(device.kind + ": " + device.label +
+				" id = " + device.deviceId);
+	  });
+	})
+	
     if (navigator.getUserMedia){
 
         navigator.getUserMedia({audio:true}, 

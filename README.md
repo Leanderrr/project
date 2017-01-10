@@ -59,7 +59,7 @@ The best vibrato oscillates 4 times per second, but on average just a bit lower 
 #### Data (sources & processing)
 The data needed for the program has to be retrieved directly from the computer's microphone.
 After the raw signal is retrieved, it needs to be put into a buffer/ array. 
-It might be necessary to downsample the signal to keep the program running smoothly. Downsampling will mostly effect the frequency detail in low frequencies, which is not a big problem.
+It might be necessary to downsample the signal to keep the program running smoothly. Downsampling will mostly effect the frequency detail in high frequencies, which is not a big problem.
 The signal is put through a fast fourier transformation (FFT). The x-axis of the resulting frequency spectrum will probably have to be log transformed.
 Names of notes are retrieved by putting the A of the 4th octave (A4) to 440 Hz. The frequency of notes above A4 can be calculated because each half step increases by the 12th root of 2 (around 1.0594630). (one octave higher the sound frequency is twice as high)
 The latest FFT results are stored in a matrix which contains the FFT results of the latest 30 or 60 seconds.
@@ -117,6 +117,6 @@ A great example for me is the Real Time Spectro program and other free music sof
 RealTimeSpectro also accesses the microphone and implements a row and spiral visualisation for the sound frequency plots. However, his program calculates the frequency power with a spring system simulation, not an FFT.
 
 Another program by Norm Spier, [SpectraTunePlus](http://nasmusicsoft.com/Spectratune.php "SpectraTunePlus info"). is able to load sound files and shows a frequency spectrum history. [SpectraTunePlus](http://nasmusicsoft.com/Spectratune.php "SpectraTunePlus info") has a more intimidating user interface.
-Norm Spier has written a lot of helpful theoretical, practical and nice-to-know information on his website. Both on how the program works, and what it shows with the analyses.
+Norm Spier has written a lot of helpful theoretical, practical and nice-to-know information on his website; Both on how the program works, and what it shows with the analyses. If you read everything on his site, you will be an expert on music physics, it has more information than 'math of music' books I've read. 
 
 [Sonic visualiser](http://sonicvisualiser.org/ "another sound visualizer program") is another program which is a bit similar to my project's program. This program can only handly complete audio files.

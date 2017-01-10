@@ -1,0 +1,10 @@
+path.spiral {
+        fill: none;
+        stroke: lightslategray;
+        stroke-width: 1px;
+      }
+      
+      circle.tick {
+        fill: none;
+        stroke: #000;
+      }
