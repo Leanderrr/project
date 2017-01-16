@@ -1,16 +1,17 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>capture microphone audio into buffer</title>
-
-<script src="microphone_input.js">
-</script>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>capture microphone audio into buffer</title>
 
 </head>
 <body>
-
     <p>Volume</p>
-    <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
+    <input id="gain" type="range" min="0" max="1" step="0.1" value="0.5"/>
+
+
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="microphone_input.js"></script>
+
 
 </body>
 </html>
