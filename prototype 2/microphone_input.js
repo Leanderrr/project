@@ -1,5 +1,5 @@
 
-var BUFF_SIZE = 2**10;
+var BUFF_SIZE = 2**13;
 
 // Calculate time line (x-axis)
 var time = 	[];
@@ -8,11 +8,12 @@ for  (var i = 1; i <= BUFF_SIZE; i++) {
    time.push(i/srate);
 }
 
+// PLOT RAW SIGNAL
 var width = 500
 	height = 170
 	margin = {top: 10, left: 50, bottom: 60, right: 50};
 	
-var svg = d3.select('body').append('svg')
+var svg1 = d3.select('body').append('svg')
 		.attr('width',width)
 		.attr('height',height)
 		.append('g')
@@ -34,7 +35,7 @@ var yAxis = d3.svg.axis()
     .orient("left");
 	
 // Add axis line plot
-svg.append("g")
+svg1.append("g")
   .attr("id","x-axis")
   .attr("transform", "translate(0," + ((height-margin.bottom)-margin.top) + ")")
   .call(xAxis)
@@ -47,7 +48,7 @@ svg.append("g")
 	.style("font-size", "15px")
 	.text("time (ms)");
   
-svg.append("g")
+svg1.append("g")
   .attr("id","y-axis")
   .call(yAxis)
 .append("text")
@@ -65,23 +66,28 @@ var webaudio_tooling_obj = function () {
 	
 	// The audio object
     var audioContext = new AudioContext();
-
-    // Print some stuff
-	console.log("buffer size = " + BUFF_SIZE);
-	console.log("buffer length = " + Math.round(time[time.length-1]) + " ms");
 	
-    var audioInput = null,
+	srate = audioContext.sampleRate;
+	
+    // Print some stuff
+	console.log("buffer size   = " + BUFF_SIZE);
+	console.log("buffer length = " + Math.round(time[time.length-1]) + " ms");
+	console.log("sample rate   = " + srate + " Hz")
+    
+	var audioInput = null,
     microphone_stream = null,
     gain_node = null,
     script_processor_node = null,
     script_processor_analysis_node = null,
     analyser_node = null;
 
+	// Set the user media version for different browsers
     if (!navigator.getUserMedia){
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
     navigator.mozGetUserMedia || navigator.msGetUserMedia;
 	};
 
+	// Execute the getusermedia API
     if (navigator.getUserMedia){
         navigator.getUserMedia({audio:true}, 
             function(stream) {
@@ -93,20 +99,17 @@ var webaudio_tooling_obj = function () {
             );
     } else { alert('getUserMedia not supported in this browser.'); }
 
-    // ---
-	
+	// Plot the raw input
     function plot_line(time, given_typed_array){
 		var line = d3.svg.line()
 			.x(function(d, i) {
 				return xScale(time[i])
 			})
 			.y(function(d, i) {
-				//console.log(y(given_typed_array[i]));
 				return yScale(given_typed_array[i]-(256/2))
 			})
-			console.log(line)
-			svg.select("#raw_line").remove()
-			svg.append("path")
+			svg1.select("#raw_line").remove()
+			svg1.append("path")
 			  .data([time, given_typed_array])
 			  .attr("class", "line")
 			  .attr("id", "raw_line")
@@ -146,7 +149,6 @@ var webaudio_tooling_obj = function () {
         });
 
         // --- setup FFT
-
         script_processor_analysis_node = audioContext.createScriptProcessor(BUFF_SIZE, 1, 1);
         script_processor_analysis_node.connect(gain_node);
 
