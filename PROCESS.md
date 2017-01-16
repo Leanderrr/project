@@ -8,9 +8,9 @@ Process book for the programming minor eindproject.
 
 ## Week 1. day 3. 2017-1-11
 
-++ Finish design file.
-++ Look at more examples for audio recording code.
-+-  Make my own microphone recording webpage.
+++ Finish design file.<br>
+++ Look at more examples for audio recording code.<br>
++-  Make my own microphone recording webpage.<br>
 
 ## Week 1, day 4. 2017-1-12
 
@@ -30,12 +30,16 @@ We put almost all our time into the presentation
 ## Week 2, day 1. 2017-1-16
 
 - Plot buffer output
+- Plot FFT
+
 
 ## Week 2, day 2. 2017-1-17
 
+Change Plot FFT
 
 ## Week 2, day 3. 2017-1-18
 
+change Plot FFT
 
 ## Week 2, day 4. 2017-1-16
 
