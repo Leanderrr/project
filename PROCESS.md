@@ -14,79 +14,83 @@ Process book for the programming minor eindproject.
 
 ## Week 1, day 4. 2017-1-12
 
-Planned:
-- Take microphone with me, test selection of two audio sources
-- Save microphone recording
-- Fix gain of audio
-Reality: 
-- Took microphone with me, selection audio source seems impossible to implement.
-- Fast Fourier Transform audio signal
+Planned:<br>
+- Take microphone with me, test selection of two audio sources<br>
+- Save microphone recording<br>
+- Fix gain of audio<br>
+Reality: <br>
+- Took microphone with me, selection audio source seems impossible to implement.<br>
+- Fast Fourier Transform audio signal<br>
 
 
 ## Week 1, day 5. 2017-1-13
 
-Planned:
-- Fast Fourier Transform audio signal
-- Time Fast Fourier Transform
-Reality:
-- We put almost all our time into the presentation
-- Timing doesn't seem to be necissary.
+Planned:<br>
+- Fast Fourier Transform audio signal<br>
+- Time Fast Fourier Transform<br>
+Reality:<br>
+- We put almost all our time into the presentation<br>
+- Timing doesn't seem to be necissary.<br>
 
 ## Week 2, day 1. 2017-1-16
 
-Planned:
-- Plot buffer output
-Reality:
-- Plotted buffer output!
-- Plotted FFT results
+Planned:<br>
+- Plot buffer output<br>
+Reality:<br>
+- Plotted buffer output!<br>
+- Plotted FFT results<br>
 
 
 ## Week 2, day 2. 2017-1-17
 
-Planned:
-- Change Plot FFT
-Reality:
-- Looked into data represented in FFT plot. 
-- Log transformed x-axis.
-- Calculated note name frequencies.
-- Put note name labels on correct place in FFT plot.
-- Looked into clearing up FFT results with gain.
+Planned:<br>
+- Change Plot FFT<br>
+Reality:<br>
+- Looked into data represented in FFT plot. <br>
+- Log transformed x-axis.<br>
+- Calculated note name frequencies.<br>
+- Put note name labels on correct place in FFT plot.<br>
+- Looked into clearing up FFT results with gain.<br>
 
+![](doc/WIP_01_18.jpg)
 
 ## Week 2, day 3. 2017-1-18
 
-Planned:
-change Plot FFT, Stack plots.
-Save FFT into matrix and plot heatmap.
+Planned:<br>
+- change Plot FFT, Stack plots.<br>
+- Save FFT into matrix and plot heatmap.<br>
+Reality:<br>
+- At home and sick<br>
 
 ## Week 2, day 4. 2017-1-16
 
-Planned:
-Plot heatmap 
-Add interactivity sliders (gain, zoom, analysis-time)
+Planned:<br>
+- Plot heatmap <br>
+- Add interactivity sliders (gain, zoom, analysis-time)<br>
+Reality: <br>
 
 ## Week 2, day 5. 2017-1-17
 
-Planned:
-- Add interactivity sliders (gain, zoom, analysis-time)
+Planned:<br>
+- Add interactivity sliders (gain, zoom, analysis-time)<br>
 
 ## Week 3, day 1.
 
-Planned:
-- Add interactivity tick (smoothed view)
-- Implement spiral FFT plot.
-- Add buttons to switch plot type.
+Planned:<br>
+- Add interactivity tick (smoothed view)<br>
+- Implement spiral FFT plot.<br>
+- Add buttons to switch plot type.<br>
 
 ## Week 3, day 2.
 
-Planned:
-- Spiral FFT plot.
+Planned:<br>
+- Spiral FFT plot.<br>
 
 
 ## Week 3, day 3.
 
-Planned: 
-- Spiral FFT plot.
+Planned: <br>
+- Spiral FFT plot.<br>
 
 ## Week 3, day 4.
 

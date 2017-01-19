@@ -1,5 +1,9 @@
 
+// Audio buffer size
 var BUFF_SIZE = 2**12;
+
+// Number of FFTs that are saved for heatmap
+var nCols = 55;
 
 
 // Create Frequency labels
@@ -82,7 +86,7 @@ function init_raw_plot(maxX) {
 		.style("font-size", "15px")
 		.text("input");
 		
-	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale}
+	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
 }
 
 // INITIALIZE FFT PLOT
@@ -142,7 +146,73 @@ function init_FFT_plot(Xlim) {
 		.style("font-size", "15px")
 		.text("amplitude");
 		
-	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale}
+	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
+}
+
+
+// INITIALIZE FFT heatmap PLOT
+function init_FFT_heat_plot(xMax, yMax) {
+	var width = 600
+		height = 500
+		margin = {top: 10, left: 50, bottom: 40, right: 30};
+	
+
+	var svg = d3.select('body').append("canvas")
+			.attr('width',width)
+			.attr('height',height)
+			.attr('id','FFT_heat_canvas')
+			.append('g')
+				.attr('id', 'FFT_heat_canvas')
+				.attr('width', width - margin.left - margin.right)
+				.attr('height',height - margin.top - margin.bottom)
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+				
+	var xScale = d3.scale.linear().domain([0,xMax]).range([0, width - margin.left - margin.right])
+		yScale = d3.scale.log().domain([0,yMax]).range([height - margin.top - margin.bottom, 0]);
+
+	// Axis properties
+	var xAxis = d3.svg.axis()
+		.scale(xScale)
+		.orient("bottom");
+	var yAxis = d3.svg.axis()
+		.ticks(3)
+		.scale(yScale)
+		.tickValues(noteFreqs)
+		.tickFormat(function(d,i){if (i % 12 == 3){ return noteNames[i]}})
+		.orient("left");
+		
+	var color = d3.scale.linear()
+		.domain([0, 256])
+		.range(["#0a0", "#eb4"]);
+
+	// Add x axis with label
+	svg.append("g")
+	  .attr("id","x-axis")
+	  .attr("transform", "translate(0," + ((height-margin.bottom)-margin.top) + ")")
+	  .call(xAxis)
+	.append("text")
+		//.attr("transform", "translate(0, " + -height + ")")
+		.attr("y", 25)
+		.attr("dy", ".71em")
+		.attr("x", width-margin.right*2)
+		.style("text-anchor", "end")
+		.style("font-size", "15px")
+		.text("time (slice)");
+	
+	// Add y axis with label
+	svg.append("g")
+	  .attr("id","y-axis")
+	  .call(yAxis)
+	.append("text")
+		//.attr("transform", "translate(0, " + -height + ")")
+		.attr("transform", "rotate(-90)")
+		.attr("y", -margin.left)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.style("font-size", "15px")
+		.text("frequency");
+		
+	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
 }
 
 // Plot the raw input
@@ -166,16 +236,17 @@ function plot_line(time, given_typed_array){
 
 // Plot the FFT
 function plot_FFT(freq_bins, freq_values){
+	console.log(svg2)
 	var  area = d3.svg.area()
 		.x(function(d, i) {
 			return svg2.xScale(freq_bins[i])
 		})
-		.y0(height-margin.bottom-margin.top)
+		.y0(svg2.height-svg2.margin.bottom-svg2.margin.top)
 		.y1(function(d, i) {
 			//console.log(freq_values[i])
 			vali = freq_values[i]-50
 			if (vali < 0){
-				return(height-margin.bottom-margin.top)}
+				return(svg2.height-svg2.margin.bottom-svg2.margin.top)}
 			else{
 				return svg2.yScale(vali)
 			}
@@ -190,6 +261,13 @@ function plot_FFT(freq_bins, freq_values){
 		  //console.log("number of freq vals: " + freq_values.length);
 }
 
+function plot_heatmap(freq_matrix){
+	var context = svg3.node().getContext("2d"),
+	image = context.createImageData(dx, dy);
+	
+    context.putImageData(image, 0, 0);
+}
+
 // ------------ AUDIO START ---------------
 var webaudio_tooling_obj = function () {
 	
@@ -201,16 +279,18 @@ var webaudio_tooling_obj = function () {
 	// Calculate time line (x-axis RAW) and calculate frequency bin values (x-axis FFT)
 	var time = 	[];
 	var freqbins = [];
+	var nBins = BUFF_SIZE/4;
 	for  (var i = 1; i <= BUFF_SIZE; i++) {
 	   time.push(i/sRate*1000);
 	}
-	for  (var i = 1; i <= BUFF_SIZE/4; i++) {
+	for  (var i = 1; i <= nBins; i++) {
 	   freqbins.push(Math.round(i * sRate/BUFF_SIZE));
 	}
 	
 	// Create SVGs for plots
 	svg1 = init_raw_plot(time[time.length-1]);
 	svg2 = init_FFT_plot([freqbins[0],freqbins[freqbins.length-1]]);
+	svg3 = init_FFT_heat_plot(nCols, nBins);
 	
     // Print some stuff
 	console.log("number of notes in octave: " + octaveLength);
@@ -291,19 +371,33 @@ var webaudio_tooling_obj = function () {
 
         var buffer_length = analyser_node.frequencyBinCount;
 
-        var array_freq_domain = new Uint8Array(buffer_length/2);
-        var array_time_domain = new Uint8Array(BUFF_SIZE);
-
+		var nBins = buffer_length/2
+		var freq_matrix = new Array(nCols);
+		for (var i = 0; i<nCols; i++){
+			freq_matrix[i] = new Uint8Array(nBins);
+		}
+			
+		//console.log(freq_matrix)
+		//console.log(freq_matrix.length)
+		
+        var array_freq = new Uint8Array(nBins);
+        var array_time_signal = new Uint8Array(BUFF_SIZE);
         script_processor_analysis_node.onaudioprocess =  function() {
-			// get the average for the first channel
-			analyser_node.getByteFrequencyData(array_freq_domain);
-			analyser_node.getByteTimeDomainData(array_time_domain);
-
-			// draw the spectrogram
 			if (microphone_stream.playbackState == microphone_stream.PLAYING_STATE) {
-				//plot_line(array_freq_domain, 1,'frequency');
-				plot_line(time, array_time_domain); // Plot the raw input
-				plot_FFT(freqbins,array_freq_domain); // Plot the FFT results
+
+				// get the average for the first channel
+				analyser_node.getByteFrequencyData(array_freq);
+				analyser_node.getByteTimeDomainData(array_time_signal);
+				
+				freq_matrix.shift(); // Remove oldest freq_bins_column
+				freq_matrix.push(array_freq); // Add new freq data
+				console.log(freq_matrix)
+			
+				// draw the plots	
+				//plot_line(array_freq, 1,'frequency');
+				plot_line(time, array_time_signal); // Plot the raw input
+				plot_FFT(freqbins,array_freq); // Plot the FFT results
+				plot_heatmap(freq_matrix)
 			}
 		};
     }
