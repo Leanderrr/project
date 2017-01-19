@@ -17,5 +17,9 @@ Leander de Kraker
 }
 
 .area{
-	 fill: steelblue;
+	fill: steelblue;
+}
+
+.svg3{
+	z-index: -1;
 }

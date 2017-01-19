@@ -68,11 +68,16 @@ Planned:<br>
 - Plot heatmap <br>
 - Add interactivity sliders (gain, zoom, analysis-time)<br>
 Reality: <br>
+- Plotted heatmap
+- Log transformed heatmap y/freq-axis
+
+![](doc/WIP_01_19.jpg)
 
 ## Week 2, day 5. 2017-1-17
 
 Planned:<br>
 - Add interactivity sliders (gain, zoom, analysis-time)<br>
+- Add axis to heatmap<br>
 
 ## Week 3, day 1.
 
