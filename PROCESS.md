@@ -68,8 +68,9 @@ Planned:<br>
 - Plot heatmap <br>
 - Add interactivity sliders (gain, zoom, analysis-time)<br>
 Reality: <br>
-- Plotted heatmap
-- Log transformed heatmap y/freq-axis
+- Saved FFT into matrix<br>
+- Plotted heatmap<br>
+- Log transformed heatmap y/freq-axis<br>
 
 ![](doc/WIP_01_19.jpg)
 
@@ -85,6 +86,10 @@ Planned:<br>
 - Add interactivity tick (smoothed view)<br>
 - Implement spiral FFT plot.<br>
 - Add buttons to switch plot type.<br>
+Reality:<br>
+- Trouble with FFT spiral plot and stacking plot
+- Made an implementation for spiral plotting in Matlab
+![](doc/spiral_tests.jpg)
 
 ## Week 3, day 2.
 

@@ -1,9 +1,9 @@
 // a spiral for john hunter, creator of matplotlib
 
-var width = 400,
-    height = 430
-    num_axes = 8,
-    tick_axis = 1,
+var width = 800,
+    height = 830
+    num_axes = 12,
+    tick_axis = 0,
     start = 0
     end = 2;
 
@@ -35,13 +35,6 @@ var spiral = d3.svg.line.radial()
   .interpolate("cardinal")
   .angle(theta)
   .radius(radius);
-
-svg.append("text")
-  .text("And there was much rejoicing!")
-  .attr("class", "title")
-  .attr("x", 0)
-  .attr("y", -height/2+16)
-  .attr("text-anchor", "middle")
 
 svg.selectAll("circle.tick")
     .data(d3.range(end,start,(start-end)/4))
