@@ -6,14 +6,28 @@ var BUFF_SIZE = 2**13;
 var nCols = 24;
 
 // Frequency Compression for heatmap
-var CompressTo = 400; // New array will be x pixels high, and log transformed data
+var CompressTo = 400; // New array will be x pixels high, and log transformed data axis
+
+// Standard FFT view
+var FFTview = "linear"
+// Add FFT view buttons function
+function FFTchoice(choice){
+	if (FFTview != choice){
+		console.log("CLICKED AND I NEED TO DO SOMETHINGGGA");
+		d3.select("#FFT_svg").remove();
+		console.log(svg2)
+		svg2 = init_FFT_plot(freqLims, choice)
+	}
+	FFTview = choice;
+	console.log("CLICKEDWHOA AAAAA", choice);
+};
 
 // Create Frequency note labels
 var notesN = 88 // number of labels to make
 	noteNames = []
 	noteNamesExample = ["A", "", "B", "C", "", "D", "", "E", "F", "", "G", ""]
 	noteFreqs = [27.5] // A0 = 27.5Hz
-	interval = Math.pow(2,1/12) // A half step is 12th root of 2 increase in frequency
+	interval = Math.pow(2, 1/12) // A half step is 12th root of 2 increase in frequency
 	octaveLength = noteNamesExample.length
 	octaveN = 0;
 for (var i = 0; i < notesN; i++){
@@ -91,7 +105,7 @@ function init_raw_plot(maxX) {
 }
 
 // INITIALIZE FFT PLOT
-function init_FFT_plot(Xlim) {
+function init_FFT_plot(Xlim, FFTview) {
 	var width = 800
 		height = 300
 		margin = {top: 10, left: 50, bottom: 60, right: 30};
@@ -105,48 +119,59 @@ function init_FFT_plot(Xlim) {
 				.attr('width', width - margin.left - margin.right)
 				.attr('height',height - margin.top - margin.bottom)
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-				
-	var xScale = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right])
-		yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top - margin.bottom, 0]);
-
-	// Axis properties
-	var xAxis = d3.svg.axis()
-		.scale(xScale)
-		.tickValues(noteFreqs)
-		.tickFormat(function(d,i){if (i % 12 == 3){ return noteNames[i]}})
-		.orient("bottom");
-	var yAxis = d3.svg.axis()
-		.ticks(3)
-		.scale(yScale)
-		.orient("left");
-		
-	// Add x axis with label
-	svg.append("g")
-	  .attr("id","x-axis")
-	  .attr("transform", "translate(0," + ((height-margin.bottom)-margin.top) + ")")
-	  .call(xAxis)
-	.append("text")
-		//.attr("transform", "translate(0, " + -height + ")")
-		.attr("y", 25)
-		.attr("dy", ".71em")
-		.attr("x", width-margin.right*2)
-		.style("text-anchor", "end")
-		.style("font-size", "15px")
-		.text("frequency (note)");
 	
-	// Add y axis with label
-	svg.append("g")
-	  .attr("id","y-axis")
-	  .call(yAxis)
-	.append("text")
-		//.attr("transform", "translate(0, " + -height + ")")
-		.attr("transform", "rotate(-90)")
-		.attr("y", -margin.left)
-		.attr("dy", ".71em")
-		.style("text-anchor", "end")
-		.style("font-size", "15px")
-		.text("amplitude");
+	if (FFTview == "stacked"){
 		
+		console.log("did the stacking thing")
+		
+		yAxis = [];
+		xScale = [];
+		yScale = [];
+		
+	}
+	else {
+		var xScale = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right])
+			yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top - margin.bottom, 0]);
+
+		// Axis properties
+		var xAxis = d3.svg.axis()
+			.scale(xScale)
+			.tickValues(noteFreqs)
+			.tickFormat(function(d,i){if (i % 12 == 3){ return noteNames[i]}})
+			.orient("bottom");
+		var yAxis = d3.svg.axis()
+			.ticks(3)
+			.scale(yScale)
+			.orient("left");
+			
+		// Add x axis with label
+		svg.append("g")
+		  .attr("id","x-axis")
+		  .attr("transform", "translate(0," + ((height-margin.bottom)-margin.top) + ")")
+		  .call(xAxis)
+		.append("text")
+			//.attr("transform", "translate(0, " + -height + ")")
+			.attr("y", 25)
+			.attr("dy", ".71em")
+			.attr("x", width-margin.right*2)
+			.style("text-anchor", "end")
+			.style("font-size", "15px")
+			.text("frequency (note)");
+		
+		// Add y axis with label
+		svg.append("g")
+		  .attr("id","y-axis")
+		  .call(yAxis)
+		.append("text")
+			//.attr("transform", "translate(0, " + -height + ")")
+			.attr("transform", "rotate(-90)")
+			.attr("y", -margin.left)
+			.attr("dy", ".71em")
+			.style("text-anchor", "end")
+			.style("font-size", "15px")
+			.text("amplitude");
+	};
+	
 	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
 }
 
@@ -250,6 +275,14 @@ function plot_line(time, given_typed_array){
 }
 
 // Plot the FFT
+function plot_FFT(freq_bins, freq_values, FFTview){
+	// Spiral FFT view selected
+	if (FFTview == "stacked"){
+		console.log("Tried to plot the stacked ones that not exist yet")
+	}
+	// Linear or starting view selected
+	else{
+		var  area = d3.svg.area()
 		.x(function(d, i) {
 			return svg2.xScale(freq_bins[i])
 		})
@@ -269,6 +302,7 @@ function plot_line(time, given_typed_array){
 		  .attr("class", "area")
 		  .attr("id", "FFT_line")
 		  .attr("d", area);
+	};
 }
 
 function plot_heatmap(freq_matrix, xMax, yMax){
@@ -323,15 +357,19 @@ var webaudio_tooling_obj = function () {
 	//console.log("log transformed number of frequency bins = ", freqIndexes.length);
 	//console.log(freqIndexes);
 	
+	
 	// Create SVGs for plots
 	svg1 = init_raw_plot(time[time.length-1]);
+	svg2 = init_FFT_plot(freqLims,freqbins, FFTview);
 	svg3 = init_FFT_heat_plot(nCols, freqLims);
+	
 	
     // Print some stuff
 	//console.log("number of notes in octave: " + octaveLength);
 	//console.log(noteFreqs);
 	//console.log(noteNames);
 	//console.log("interval = " + interval)
+	console.log(freqbins)
 	//console.log(freqIndexes)
 	//console.log("buffer size   = " + BUFF_SIZE);
 	//console.log("buffer length = " + Math.round(time[time.length-1]) + " ms");
@@ -402,6 +440,8 @@ var webaudio_tooling_obj = function () {
 
         microphone_stream.connect(analyser_node);
 
+		// Initialize freq matrix for FFT heatmap
+		var nBins = analyser_node.frequencyBinCount/2;
 		var freq_matrix = new Array(nCols);
 		for (var i = 0; i<nCols; i++){
 			freq_matrix[i] = new Uint8Array(nBins);
@@ -427,9 +467,11 @@ var webaudio_tooling_obj = function () {
 				}
 				freq_matrix.shift(); // Remove oldest freq_bins_column
 				freq_matrix.push(image_slice); // Add new freq data
+
 				// draw the plots	
 				//plot_line(array_freq, 1,'frequency');
 				plot_line(time, array_time_signal); // Plot the raw input
+				plot_FFT(freqbins, array_freq, FFTview); // Plot the FFT results
 				plot_heatmap(freq_matrix, nCols, nBins);
 			}
 		};
