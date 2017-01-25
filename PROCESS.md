@@ -112,6 +112,8 @@ Planned: <br>
 - Spiral FFT plot.<br>
 Reality: <br>
 - Fixed small bug that caused heatmap to plot incorrectly and boring.
+- Inproved performance of Matlab spiral plot.
+- Tried to implement 1-octave per spiral spiral, but failed.
 
 ## Week 3, day 4.
 

@@ -250,8 +250,6 @@ function plot_line(time, given_typed_array){
 }
 
 // Plot the FFT
-function plot_FFT(freq_bins, freq_values){
-	var  area = d3.svg.area()
 		.x(function(d, i) {
 			return svg2.xScale(freq_bins[i])
 		})
@@ -276,7 +274,6 @@ function plot_FFT(freq_bins, freq_values){
 function plot_heatmap(freq_matrix, xMax, yMax){
 	context = svg3.canvas.node().getContext("2d"),
 	image = context.createImageData(xMax, yMax);
-
 	for (var y = 0, p = 0; y < yMax; y++) {
 		for (var x = 0; x < xMax; x++) {
 			var c = d3.rgb(svg3.color(freq_matrix[x][y]));
@@ -328,7 +325,6 @@ var webaudio_tooling_obj = function () {
 	
 	// Create SVGs for plots
 	svg1 = init_raw_plot(time[time.length-1]);
-	svg2 = init_FFT_plot(freqLims);
 	svg3 = init_FFT_heat_plot(nCols, freqLims);
 	
     // Print some stuff
@@ -336,7 +332,6 @@ var webaudio_tooling_obj = function () {
 	//console.log(noteFreqs);
 	//console.log(noteNames);
 	//console.log("interval = " + interval)
-	//console.log(freqbins)
 	//console.log(freqIndexes)
 	//console.log("buffer size   = " + BUFF_SIZE);
 	//console.log("buffer length = " + Math.round(time[time.length-1]) + " ms");
@@ -393,7 +388,6 @@ var webaudio_tooling_obj = function () {
 			console.log("original: ", nCols)
 			nCols = this.value
 			console.log("set to:   ", this.value);
-			
 			redraw_FFT_heat_plot(nCols, svg3)
 			plot_heatmap(freq_matrix, nCols, nBins);
 		});
@@ -408,9 +402,6 @@ var webaudio_tooling_obj = function () {
 
         microphone_stream.connect(analyser_node);
 
-        var buffer_length = analyser_node.frequencyBinCount;
-
-		var nBins = buffer_length/2
 		var freq_matrix = new Array(nCols);
 		for (var i = 0; i<nCols; i++){
 			freq_matrix[i] = new Uint8Array(nBins);
@@ -436,11 +427,9 @@ var webaudio_tooling_obj = function () {
 				}
 				freq_matrix.shift(); // Remove oldest freq_bins_column
 				freq_matrix.push(image_slice); // Add new freq data
-				
 				// draw the plots	
 				//plot_line(array_freq, 1,'frequency');
 				plot_line(time, array_time_signal); // Plot the raw input
-				plot_FFT(freqbins,array_freq); // Plot the FFT results
 				plot_heatmap(freq_matrix, nCols, nBins);
 			}
 		};

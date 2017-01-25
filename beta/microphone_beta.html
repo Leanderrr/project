@@ -7,6 +7,9 @@
 
 <body>
 	<div id="raw_plot"></div>
+	
+	<button id="buttonLinear" onclick='FFTchoice("linear")'>Linear</button>
+		
 	<div id="FFT_plot"></div>
 	<div id="heatmap_DIV" style='width: 800px; height: 400px;'>
 		 <div id="heatmap_axis"></div>
@@ -14,7 +17,7 @@
 	</div>
 
     <p>FFT history plot length</p>
-    <input id="historyLength" type="range" min="3" max="50" step="1" value="24"/>
+    <input id="historyLength" type="range" min="12" max="50" step="1" value="24"/>
 	
 	<link rel="stylesheet" type="text/css" href="microphone_beta.css"/>
 	<script src="http://d3js.org/d3.v3.min.js"></script>
