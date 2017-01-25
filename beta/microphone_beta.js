@@ -1,9 +1,9 @@
 
 // Audio buffer size
-var BUFF_SIZE = 2**12;
+var BUFF_SIZE = 2**13;
 
 // Number of FFTs that are saved for heatmap
-var nCols = 66;
+var nCols = 24;
 
 // Frequency Compression for heatmap
 var CompressTo = 400; // New array will be x pixels high, and log transformed data
@@ -25,10 +25,9 @@ for (var i = 0; i < notesN; i++){
 	nami = noteNamesExample[i % octaveLength];
 	if (nami == "C"){
 		octaveN += 1;
-	};
-	if (nami != ""){
 		nami = nami + octaveN;
 	};
+
 	noteNames.push(nami)
 };
 
@@ -39,7 +38,7 @@ function init_raw_plot(maxX) {
 		height = 150
 		margin = {top: 10, left: 50, bottom: 60, right: 30};
 	
-	var svg = d3.select('body').append('svg')
+	var svg = d3.select('#raw_plot').append('svg')
 			.attr('width',width)
 			.attr('height',height)
 			.attr('id','raw_line_svg')
@@ -93,129 +92,145 @@ function init_raw_plot(maxX) {
 
 // INITIALIZE FFT PLOT
 function init_FFT_plot(Xlim) {
-	var width = 800,
-		height = 400
-		num_axes = 4,
-		tick_axis = 0,
-		start = 0
-		end = 4;
-
-	var theta = function(r) {
-	  return 2*Math.PI*r;
-	};
+	var width = 800
+		height = 300
+		margin = {top: 10, left: 50, bottom: 60, right: 30};
 	
-	var radius = d3.scale.linear()
-	  .domain([start, end])
-	  .range([0, d3.min([width,height])/2-20]);
+	var svg = d3.select('#FFT_plot').append('svg')
+			.attr('width',width)
+			.attr('height',height)
+			.attr('id','FFT_svg')
+			.append('g')
+				.attr('id', 'FFT_canvas')
+				.attr('width', width - margin.left - margin.right)
+				.attr('height',height - margin.top - margin.bottom)
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+				
+	var xScale = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right])
+		yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top - margin.bottom, 0]);
 
-	var angle = d3.scale.linear()
-	  .domain([0,num_axes])
-	  .range([0,360])
-
-	var svg = d3.select("body").append("svg")
-		.attr("width", width)
-		.attr("height", height)
-	  .append("g")
-		.attr("transform", "translate(" + width/2 + "," + (height/2+8) +")");
-
-	// number of points for spiral
-	var pieces = d3.range(start, end+0.001, (end-start)/1000);
+	// Axis properties
+	var xAxis = d3.svg.axis()
+		.scale(xScale)
+		.tickValues(noteFreqs)
+		.tickFormat(function(d,i){if (i % 12 == 3){ return noteNames[i]}})
+		.orient("bottom");
+	var yAxis = d3.svg.axis()
+		.ticks(3)
+		.scale(yScale)
+		.orient("left");
+		
+	// Add x axis with label
+	svg.append("g")
+	  .attr("id","x-axis")
+	  .attr("transform", "translate(0," + ((height-margin.bottom)-margin.top) + ")")
+	  .call(xAxis)
+	.append("text")
+		//.attr("transform", "translate(0, " + -height + ")")
+		.attr("y", 25)
+		.attr("dy", ".71em")
+		.attr("x", width-margin.right*2)
+		.style("text-anchor", "end")
+		.style("font-size", "15px")
+		.text("frequency (note)");
 	
-	var spiral = d3.svg.line.radial()
-	  .angle(theta)
-	  .radius(radius);
-	
-	var pieces = [0, 0.1,0.02,0.60,0.9,1,4]
-	
-	
-	svg.selectAll(".axis")
-		.data(d3.range(num_axes))
-	  .enter().append("g")
-		.attr("class", "axis")
-		.attr("transform", function(d) { return "rotate(" + -angle(d) + ")"; })
-	  .call(radial_tick)
-	  .append("text")
-		.attr("y", radius(end)+13)
-		.text(function(d) { return angle(d); })
-		.attr("text-anchor", "middle")
-		.attr("transform", function(d) { return "rotate(" + -90 + ")" })
-
-	svg.selectAll(".spiral")
-		.data([pieces])
-	  .enter().append("path")
-		.attr("class", "spiral")
-		.attr("d", spiral)
-		.attr("transform", function(d) { return "rotate(" + 90 + ")" });
-
-	function radial_tick(selection) {
-	  selection.each(function(axis_num) {
-		d3.svg.axis()
-		  .scale(radius)
-		  .ticks(0)
-		  .orient("bottom")(d3.select(this))
-
-		d3.select(this)
-		  .selectAll("text")
-		  .attr("text-anchor", "bottom")
-		  .attr("transform", "rotate(" + angle(axis_num) + ")")
-	  });
-	}
+	// Add y axis with label
+	svg.append("g")
+	  .attr("id","y-axis")
+	  .call(yAxis)
+	.append("text")
+		//.attr("transform", "translate(0, " + -height + ")")
+		.attr("transform", "rotate(-90)")
+		.attr("y", -margin.left)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.style("font-size", "15px")
+		.text("amplitude");
 		
 	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
 }
 
 
 // INITIALIZE FFT heatmap PLOT
-function init_FFT_heat_plot(xMax, yMax) {
+function init_FFT_heat_plot(xMax, yLim) {
 	var width = 800,
 		height = 400;
 		margin = {top: 10, left: 50, bottom: 60, right: 30};
-		
-	var x = d3.scale.linear().domain([0, xMax]).range([0, width-margin.left]);
-	var y = d3.scale.linear().domain([0, yMax]).range([height-margin.bottom-margin.top, 0]);
-
-	var canvas = d3.select("body").append("canvas")
-	  .attr("class", "canvas")
-	  .attr("width", xMax)
-	  .attr("height", yMax)
-	  .style("width", width + "px")
-	  .style("height", height + "px")
-	  .style("zindex", "-1");
-	  	
+	
+	xLim = [-(xMax*BUFF_SIZE/2)/10000, 0];
+	
+	var x = d3.scale.linear().domain(xLim).range([0, width-margin.left-margin.right]);
+	var y = d3.scale.log().domain(yLim).range([height-margin.bottom-margin.top, 0]);
+	
+	// Canvas element which will contain the heatmap
+	var canvas = d3.select("#heatmap_canvas").append("canvas")
+		.attr("class", "canvas")
+		.attr("width", xMax)
+		.attr("height", height)
+		.style("width",  (width-margin.left-margin.right) + "px")
+		.style("height", height-margin.bottom-margin.top + "px")
+		.style("zindex", "1");
+	  
+	// SVG which contains the axis and labels
+	var svg = d3.select("#heatmap_axis").append("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.attr("id","FFT_heatmap");
+	
 	var xAxis = d3.svg.axis()
 	  .scale(x)
-	  .orient("top")
-	  .ticks(20);
+	  .orient("bottom")
+	  .ticks(10);
 
 	var yAxis = d3.svg.axis()
 	  .scale(y)
-	  .orient("right");
-
-
-	var svg = d3.select("canvas").append("svg")
-	  .attr("width", width)
-	  .attr("height", height)
-	  .style("zindex", "1");
-	  
+	  .tickValues(noteFreqs)
+	  .tickFormat(function(d,i){if (i % 12 == 3){ return noteNames[i]}})
+	  .orient("left");
+	
 	svg.append("g")
 	  .attr("class", "x axis")
-	  .attr("transform", "translate(0," + height + ")")
+	  .attr("transform", "translate(" + margin.left + "," + (height-margin.bottom) + ")")
 	  .call(xAxis)
+	.append("text")
+		//.attr("transform", "translate(0, " + -height + ")")
+		.attr("y", 25)
+		.attr("dy", ".71em")
+		.attr("x", width-margin.right*2)
+		.style("text-anchor", "end")
+		.style("font-size", "15px")
+		.text("time (sec)");
 	  
 	svg.append("g")
 	  .attr("class", "y axis")
-	  .call(yAxis);
+	  .attr("transform", "translate(" + margin.left +"," + margin.top + ")")
+	  .call(yAxis)
+	  .append("text")
+		//.attr("transform", "translate(0, " + -height + ")")
+		.attr("transform", "rotate(-90)")
+		.attr("y", -margin.left)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.style("font-size", "15px")
+		.text("frequency (note)");
 	
 	// The colormap of the heatmap
 	var color = d3.scale.linear()
 		.domain([0, 100, 150, 200, 225, 255])
-		//.range(["#000", "#300", "#600", "#A30", "#D70", "#FF2"]) // Hot
+		//.range(["#000", "#600", "#910", "#B40", "#D80", "#FF2"]) // Hot
 		//.range(["#FFF", "#CCF", "#BBF", "#99D", "#85B", "#905"]); // White blue
-		.range(["#000", "#005", "#008", "#03A", "#07D", "#2FF"]) // Black blue
-
+		.range(["#000", "#016", "#029", "#04B", "#08D", "#2FF"]) // Black blue
 
 	return {"svg":svg, "xAxis":xAxis, "canvas":canvas, "color":color}
 }
+
+// Call when the number of columns is changed of the heatmap
+function redraw_FFT_heat_plot(xMax){
+	svg3.svg.remove();
+	svg3.canvas.remove();
+	svg3 =  init_FFT_heat_plot(nCols, freqLims);
+}
+
 
 // Plot the raw input
 function plot_line(time, given_typed_array){
@@ -232,8 +247,6 @@ function plot_line(time, given_typed_array){
 		  .attr("class", "line")
 		  .attr("id", "raw_line")
 		  .attr("d", line);
-	//console.log(label);
-	//console.log(given_typed_array);
 }
 
 // Plot the FFT
@@ -258,8 +271,6 @@ function plot_FFT(freq_bins, freq_values){
 		  .attr("class", "area")
 		  .attr("id", "FFT_line")
 		  .attr("d", area);
-		  //console.log("number of freq bins: " + freq_bins.length);
-		  //console.log("number of freq vals: " + freq_values.length);
 }
 
 function plot_heatmap(freq_matrix, xMax, yMax){
@@ -297,27 +308,7 @@ var webaudio_tooling_obj = function () {
 	for  (var i = 1; i <= binCount; i++) {
 	   freqbins.push(Math.round(i * sRate/BUFF_SIZE));
 	}
-	
-	// Create indexes of which elements to take to create a log transformed
-	/*	and compressed image of the frequency spectrum
-	var start = Math.log(freqbins[0]); // First frequency
-	var stop = Math.log(freqbins[freqbins.length-1]); // Stop at last frequency
-	var step = (stop-start)/CompressTo;
-	var freqIndexes = [start];
-	for (i = 1; i<CompressTo; i++){
-		freqIndexes.push(freqIndexes[i-1] + step);
-		freqIndexes[i-1] = Math.exp(freqIndexes[i-1]);
-	}
-	freqIndexes[i-1] = Math.round(Math.exp(freqIndexes[i-1]));
-	var normalizer = freqbins[freqbins.length-1]/CompressTo;
-	for (i = 0; i<freqIndexes.length; i++){
-		console.log(freqIndexes[i]);
-		freqIndexes[i] = Math.round(freqIndexes[i] / normalizer);
-		console.log(freqIndexes[i]);
-	}
-	console.log("normalizer = " + normalizer)
-	console.log(freqIndexes);
-	*/
+	freqLims = [freqbins[0],freqbins[freqbins.length-1]];
 	
 	// Create indexes of which elements to take to create a log transformed
 	//	and compressed image of the frequency spectrum
@@ -331,26 +322,25 @@ var webaudio_tooling_obj = function () {
 	}
 	freqIndexes[i-1] = Math.round(Math.exp(freqIndexes[i-1]));
 
-	console.log("original number of frequency bins = ", binCount);
-	console.log("log transformed number of frequency bins = ", freqIndexes.length);
-	console.log(freqIndexes);
-	
+	//console.log("original number of frequency bins = ", binCount);
+	//console.log("log transformed number of frequency bins = ", freqIndexes.length);
+	//console.log(freqIndexes);
 	
 	// Create SVGs for plots
 	svg1 = init_raw_plot(time[time.length-1]);
-	svg2 = init_FFT_plot([freqbins[0],freqbins[freqbins.length-1]]);
-	svg3 = init_FFT_heat_plot(nCols, CompressTo);
+	svg2 = init_FFT_plot(freqLims);
+	svg3 = init_FFT_heat_plot(nCols, freqLims);
 	
     // Print some stuff
-	console.log("number of notes in octave: " + octaveLength);
+	//console.log("number of notes in octave: " + octaveLength);
 	//console.log(noteFreqs);
 	//console.log(noteNames);
-	console.log("interval = " + interval)
-	console.log(freqbins)
-	console.log(freqIndexes)
-	console.log("buffer size   = " + BUFF_SIZE);
-	console.log("buffer length = " + Math.round(time[time.length-1]) + " ms");
-	console.log("sample rate   = " + sRate + " Hz")
+	//console.log("interval = " + interval)
+	//console.log(freqbins)
+	//console.log(freqIndexes)
+	//console.log("buffer size   = " + BUFF_SIZE);
+	//console.log("buffer length = " + Math.round(time[time.length-1]) + " ms");
+	//console.log("sample rate   = " + sRate + " Hz")
     
 	var audioInput = null,
     microphone_stream = null,
@@ -377,40 +367,46 @@ var webaudio_tooling_obj = function () {
             );
     } else { alert('getUserMedia not supported in this browser.'); }
 
-		
-    function start_microphone(stream){
 	// Original audio is only available in this function.
+    function start_microphone(stream){
+	
         gain_node = audioContext.createGain();
         gain_node.connect( audioContext.destination );
 
         microphone_stream = audioContext.createMediaStreamSource(stream);
-        //microphone_stream.connect(gain_node); 
 
-        //script_processor_node = audioContext.createScriptProcessor(BUFF_SIZE, 1, 1);
-        //script_processor_node.onaudioprocess = process_microphone_buffer;
-
-        //microphone_stream.connect(script_processor_node);
-
-        // --- enable volume control for output speakers
-
-        document.getElementById('volume').addEventListener('change', function() {
-            gain_node.gain.value = this.value;
-			console.log("curr_gain ", this.value);
-
-        });
+		// Enable increase and decrease of number of bins of FFT heatmap
+        document.getElementById('historyLength').addEventListener('change', function(){
+			if (this.value > nCols){
+				var extra = this.value - nCols
+				var filler = new Uint8Array(nBins)
+				for (var i = 0; i<extra; i++){
+					freq_matrix.unshift(filler)
+				}
+			}
+			else{
+				var toDelete = nCols - this.value;
+				for (var i = 0; i<toDelete; i++){
+					freq_matrix.shift()
+				}
+			}
+			console.log("original: ", nCols)
+			nCols = this.value
+			console.log("set to:   ", this.value);
+			
+			redraw_FFT_heat_plot(nCols, svg3)
+			plot_heatmap(freq_matrix, nCols, nBins);
+		});
 
         // --- setup FFT
         script_processor_analysis_node = audioContext.createScriptProcessor(BUFF_SIZE, 1, 1);
         script_processor_analysis_node.connect(gain_node);
-		
 		
         analyser_node = audioContext.createAnalyser();
         analyser_node.smoothingTimeConstant = 0;
         analyser_node.fftSize = BUFF_SIZE;
 
         microphone_stream.connect(analyser_node);
-
-        //analyser_node.connect(script_processor_analysis_node);
 
         var buffer_length = analyser_node.frequencyBinCount;
 
@@ -419,7 +415,7 @@ var webaudio_tooling_obj = function () {
 		for (var i = 0; i<nCols; i++){
 			freq_matrix[i] = new Uint8Array(nBins);
 		}
-			
+		
 		//console.log(freq_matrix)
 		//console.log(freq_matrix.length)
 		
@@ -428,7 +424,7 @@ var webaudio_tooling_obj = function () {
 		
 		script_processor_analysis_node.onaudioprocess =  function() {
 			if (microphone_stream.playbackState == microphone_stream.PLAYING_STATE) {
-
+				
 				// get the average for the first channel
 				analyser_node.getByteFrequencyData(array_freq);
 				analyser_node.getByteTimeDomainData(array_time_signal);

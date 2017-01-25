@@ -165,7 +165,7 @@ function init_FFT_heat_plot(xMax, yMax) {
 	  .attr("class", "canvas")
 	  .attr("width", xMax)
 	  .attr("height", yMax)
-	  .style("width", width + "px")
+	  .style("width", width-margin.left + "px")
 	  .style("height", height + "px")
 	  .style("zindex", "-1");
 	  	

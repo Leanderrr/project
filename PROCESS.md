@@ -79,6 +79,8 @@ Reality: <br>
 Planned:<br>
 - Add interactivity sliders (gain, zoom, analysis-time)<br>
 - Add axis to heatmap<br>
+Reality:<br>
+- Spent most time for presentation again.<br>
 
 ## Week 3, day 1.
 
@@ -87,22 +89,36 @@ Planned:<br>
 - Implement spiral FFT plot.<br>
 - Add buttons to switch plot type.<br>
 Reality:<br>
-- Trouble with FFT spiral plot and stacking plot
-- Made an implementation for spiral plotting in Matlab
-![](doc/spiral_tests.jpg)
+- Trouble with FFT spiral plot and stacking plot<br>
+- Made an implementation for spiral plotting in Matlab<br>
+
+![](doc/spiral_tests.png)
 
 ## Week 3, day 2.
 
 Planned:<br>
 - Spiral FFT plot.<br>
+Reality:<br>
+- Heatmap placement corrected and axis added<br>
+- Correct frequency/y-axis implemented<br>
+- Correct x-axis implemented<br>
+- Zoom slider for heatmap implemented!<br>
 
+![](doc/WIP_01_24.jpg)
 
 ## Week 3, day 3.
 
 Planned: <br>
 - Spiral FFT plot.<br>
+Reality: <br>
+- Fixed small bug that caused heatmap to plot incorrectly and boring.
 
 ## Week 3, day 4.
+
+Planned: <br>
+- Spiral FFT plot.<br>
+- Smoothing signal option.<br>
+
 
 ## Week 3, day 5.
 
