@@ -6,12 +6,23 @@
 </head>
 
 <body>
-	<div id="raw_plot"></div>
-	
 	<button id="buttonLinear" onclick='FFTchoice("linear")'>Linear</button>
 	<button id="buttonStacked" onclick='FFTchoice("stacked")'>Strack</button>
-		
+	
+	<br><br>
+	<div class="onoffswitch">
+		<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick='smoothingToggle()'>
+		<label class="onoffswitch-label" for="myonoffswitch">
+			<span class="onoffswitch-inner"></span>
+			<span class="onoffswitch-switch"></span>
+		</label>
+	</div>
+	<br>
 	<div id="FFT_plot"></div>
+	
+	<div id="raw_plot"></div>
+
+	
 	<div id="heatmap_DIV" style='width: 800px; height: 400px;'>
 		 <div id="heatmap_axis"></div>
 		 <div id="heatmap_canvas"></div>

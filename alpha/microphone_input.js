@@ -245,6 +245,7 @@ function plot_FFT(freq_bins, freq_values){
 		  .attr("class", "area")
 		  .attr("id", "FFT_line")
 		  .attr("d", area);
+		  console.log("xScale = ", svg2.xScale[i])
 		  //console.log("number of freq bins: " + freq_bins.length);
 		  //console.log("number of freq vals: " + freq_values.length);
 }
