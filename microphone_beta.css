@@ -4,8 +4,20 @@ Leander de Kraker
 */
 
 .container{
-	border-style: groove; 
+	width: 98%;
+    margin: auto;
+	border-style: groove;
+	border-width: 2px;
+	border-color: #DDD;
+	clear: both;
 }
+
+.subcontainer{
+	border-style: groove;
+	border-width: 2px;
+	border-color: #DDD;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -64,12 +76,12 @@ Leander de Kraker
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-    content: "Smoothing";
+    content: "Smoothed";
     padding-left: 5px;
     background-color: #3590C4; color: ;
 }
 .onoffswitch-inner:after {
-    content: "";
+    content: "Direct";
     padding-right: 5px;
     background-color: #EEEEEE; color: ;
     text-align: right;

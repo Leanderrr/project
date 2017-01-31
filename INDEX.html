@@ -6,30 +6,35 @@
 </head>
 
 <body>
-	<div class="container" style="height: +px">
-		<div style="width:700px; float:left;">
-			<button id="buttonLinear" onclick='FFTchoice("linear")'>Linear</button>
-			<button id="buttonStacked" onclick='FFTchoice("stacked")'>Strack</button>
-			
-			<button id="buttonPause" onclick='PauseChoice()'>Pause/ play</button>
-			
-			<br><br>
-			<div class="onoffswitch">
-				<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick='smoothingToggle()'>
-				<label class="onoffswitch-label" for="myonoffswitch">
-					<span class="onoffswitch-inner"></span>
-					<span class="onoffswitch-switch"></span>
-				</label>
+	<div class="container">
+		<div class="subcontainer" style="width:600px; float: left;">
+			<div class="optioncontainer" style="height: 100px">
+				<button id="buttonLinear" onclick='FFTchoice("linear")'>Linear</button>
+				<button id="buttonStacked" onclick='FFTchoice("stacked")'>Strack</button>
+				
+				<button id="buttonPause" onclick='PauseChoice()'>Pause/ play</button>
+				
+				<br><br>
+				<div class="onoffswitch">
+					<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick='smoothingToggle()'>
+					<label class="onoffswitch-label" for="myonoffswitch">
+						<span class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>
 			</div>
-			<br>
-			<div id="FFT_plot"></div>
+			<p>Sound frequency plot</p>
+			<div id="FFT_DIV" style='width: 600px; height: 450px;'>
+				<div id="FFT_plot"></div>
+			</div>
 		</div>
 
-		<div style="width:700px; float:right;">
-			<p>FFT history plot length</p>
-			<input id="historyLength" type="range" min="12" max="30" step="1" value="24"/>
-
-			<div id="heatmap_DIV" style='width: 800px; height: 400px;'>
+		<div class="subcontainer" style="width:600px; float:right;">
+			<div class="optioncontainer" style="height: 100px">
+				<input id="historyLength" type="range" min="12" max="30" step="1" value="24"/>
+			</div>
+			<p>Sound frequency plot through time</p>
+			<div id="heatmap_DIV" style='width: 600px; height: 450px;'>
 				 <div id="heatmap_axis"></div>
 				 <div id="heatmap_canvas"></div>
 			</div>
@@ -37,7 +42,8 @@
 
 	</div>
 	<div class="container">	
-			<div id="raw_plot"></div>
+		<p>Sound raw signal plot</p>
+		<div id="raw_plot"></div>
 	</div>
 	
 	

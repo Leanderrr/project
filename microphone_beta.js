@@ -79,7 +79,7 @@ for (var i = 0; i < notesN; i++){
 // ----------  PLOTTING FUNCTIONS -----------
 // INITIALIZE RAW SIGNAL PLOT
 function init_raw_plot(maxX) {
-	var width = 700
+	var width = 600
 		height = 150
 		margin = {top: 10, left: 50, bottom: 50, right: 30};
 	
@@ -139,14 +139,14 @@ function init_raw_plot(maxX) {
 
 // INITIALIZE FFT PLOT
 function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
-	var width = 700
+	var width = 600
 		height = 450
 		margin = {top: 10, left: 50, bottom: 40, right: 30};
 	
 	var xScale = [];
 	if (FFTview == "stacked"){
 		numOct = octaveIndexes.length-2;
-		height = (height/numOct); //- margin.top;
+		height = (height/numOct) - margin.top;
 		
 		var yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top, 0]);
 
@@ -252,8 +252,8 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 
 // INITIALIZE FFT heatmap PLOT
 function init_FFT_heat_plot(xMax, yLim) {
-	var width = 700,
-		height = 400;
+	var width = 600,
+		height = 450;
 		margin = {top: 10, left: 50, bottom: 60, right: 30};
 	
 	xLim = [-(xMax*BUFF_SIZE/4)/10000, 0];
@@ -361,7 +361,7 @@ function plot_FFT(freq_bins, freq_values, octaveIndexes, FFTview){
 			})
 			.y0(svg2.height-svg2.margin.top)
 			.y1(function(d, j){
-				vali = valuesi[j]-100
+				vali = valuesi[j]-50
 				if (vali < 0){
 					return(svg2.height-svg2.margin.top)}
 					
@@ -388,7 +388,7 @@ function plot_FFT(freq_bins, freq_values, octaveIndexes, FFTview){
 		.y0(svg2.height-svg2.margin.bottom-svg2.margin.top)
 		.y1(function(d, i) {
 			//console.log(freq_values[i])
-			vali = freq_values[i]-30
+			vali = freq_values[i]-50
 			if (vali < 0){
 				return(svg2.height-svg2.margin.bottom-svg2.margin.top)}
 			else{
