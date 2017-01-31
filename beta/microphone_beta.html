@@ -6,10 +6,12 @@
 </head>
 
 <body>
-	<div class="container" style="height: 600px">
+	<div class="container" style="height: +px">
 		<div style="width:700px; float:left;">
 			<button id="buttonLinear" onclick='FFTchoice("linear")'>Linear</button>
 			<button id="buttonStacked" onclick='FFTchoice("stacked")'>Strack</button>
+			
+			<button id="buttonPause" onclick='PauseChoice()'>Pause/ play</button>
 			
 			<br><br>
 			<div class="onoffswitch">
@@ -25,7 +27,7 @@
 
 		<div style="width:700px; float:right;">
 			<p>FFT history plot length</p>
-			<input id="historyLength" type="range" min="12" max="50" step="1" value="24"/>
+			<input id="historyLength" type="range" min="12" max="30" step="1" value="24"/>
 
 			<div id="heatmap_DIV" style='width: 800px; height: 400px;'>
 				 <div id="heatmap_axis"></div>

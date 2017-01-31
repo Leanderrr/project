@@ -11,12 +11,14 @@ beta version 2
 var BUFF_SIZE = 2**12;
 
 // Number of FFTs that are saved for heatmap
-var nCols = 24;
+var nCols = 20;
 
 // Frequency Compression for heatmap
 var CompressTo = 400; // New array will be x pixels high, and log transformed data axis
 
 var smoothing = 0;
+
+var pause = 0;
 
 // Standard FFT view
 var FFTview = "linear"
@@ -32,7 +34,14 @@ function smoothingToggle(){
 	}
 }
 
-
+// Pause/ play Button functionality
+function PauseChoice(){
+	if (pause == 0){
+		pause = 1;
+	} else {
+		pause = 0;
+	}
+}
 // Add FFT view buttons function
 function FFTchoice(choice){
 	if (FFTview != choice){
@@ -83,7 +92,7 @@ function init_raw_plot(maxX) {
 				.attr('width', width - margin.left - margin.right)
 				.attr('height',height - margin.top - margin.bottom)
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-				
+	
 	var xScale = d3.scale.linear().domain([0, maxX]).range([0, width - margin.left - margin.right])
 		yScale = d3.scale.linear().domain([-256/2, 256/2]).range([height - margin.top - margin.bottom, 0]);
 
@@ -139,7 +148,7 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 		numOct = octaveIndexes.length-2;
 		height = (height/numOct); //- margin.top;
 		
-		var yScale = d3.scale.linear().domain([1, 250]).range([height - margin.top, 0]);
+		var yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top, 0]);
 
 		for (i=numOct; i>0; i--){
 			var Xlim = [freqBins[octaveIndexes[i]], freqBins[octaveIndexes[i+1]]];
@@ -551,7 +560,7 @@ var webaudio_tooling_obj = function () {
         var array_time_signal = new Uint8Array(BUFF_SIZE);
 		
 		script_processor_analysis_node.onaudioprocess =  function() {
-			if (microphone_stream.playbackState == microphone_stream.PLAYING_STATE) {
+			if ((microphone_stream.playbackState == microphone_stream.PLAYING_STATE) && (pause == 0)) {
 				
 				// With no smoothing: update array_freq with the newest Frequency data
 				// With smoothing: Use smoothing array to update array_freq with an average of the two
