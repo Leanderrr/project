@@ -70,7 +70,7 @@ for (var i = 0; i < notesN; i++){
 // ----------  PLOTTING FUNCTIONS -----------
 // INITIALIZE RAW SIGNAL PLOT
 function init_raw_plot(maxX) {
-	var width = 700
+	var width = 800
 		height = 150
 		margin = {top: 10, left: 50, bottom: 50, right: 30};
 	
@@ -130,7 +130,7 @@ function init_raw_plot(maxX) {
 
 // INITIALIZE FFT PLOT
 function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
-	var width = 700
+	var width = 800
 		height = 450
 		margin = {top: 10, left: 50, bottom: 40, right: 30};
 	
@@ -243,7 +243,7 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 
 // INITIALIZE FFT heatmap PLOT
 function init_FFT_heat_plot(xMax, yLim) {
-	var width = 700,
+	var width = 800,
 		height = 400;
 		margin = {top: 10, left: 50, bottom: 60, right: 30};
 	

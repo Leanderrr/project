@@ -6,30 +6,38 @@
 </head>
 
 <body>
-	<button id="buttonLinear" onclick='FFTchoice("linear")'>Linear</button>
-	<button id="buttonStacked" onclick='FFTchoice("stacked")'>Strack</button>
-	
-	<br><br>
-	<div class="onoffswitch">
-		<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick='smoothingToggle()'>
-		<label class="onoffswitch-label" for="myonoffswitch">
-			<span class="onoffswitch-inner"></span>
-			<span class="onoffswitch-switch"></span>
-		</label>
-	</div>
-	<br>
-	<div id="FFT_plot"></div>
-	
-	<div id="raw_plot"></div>
+	<div class="container" style="height: 600px">
+		<div style="width:700px; float:left;">
+			<button id="buttonLinear" onclick='FFTchoice("linear")'>Linear</button>
+			<button id="buttonStacked" onclick='FFTchoice("stacked")'>Strack</button>
+			
+			<br><br>
+			<div class="onoffswitch">
+				<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick='smoothingToggle()'>
+				<label class="onoffswitch-label" for="myonoffswitch">
+					<span class="onoffswitch-inner"></span>
+					<span class="onoffswitch-switch"></span>
+				</label>
+			</div>
+			<br>
+			<div id="FFT_plot"></div>
+		</div>
 
-	
-	<div id="heatmap_DIV" style='width: 800px; height: 400px;'>
-		 <div id="heatmap_axis"></div>
-		 <div id="heatmap_canvas"></div>
-	</div>
+		<div style="width:700px; float:right;">
+			<p>FFT history plot length</p>
+			<input id="historyLength" type="range" min="12" max="50" step="1" value="24"/>
 
-    <p>FFT history plot length</p>
-    <input id="historyLength" type="range" min="12" max="50" step="1" value="24"/>
+			<div id="heatmap_DIV" style='width: 800px; height: 400px;'>
+				 <div id="heatmap_axis"></div>
+				 <div id="heatmap_canvas"></div>
+			</div>
+		</div>
+
+	</div>
+	<div class="container">	
+			<div id="raw_plot"></div>
+	</div>
+	
 	
 	<link rel="stylesheet" type="text/css" href="microphone_beta.css"/>
 	<script src="http://d3js.org/d3.v3.min.js"></script>

@@ -2,10 +2,6 @@
 Leander de Kraker
 10423354
 */
-
-.container{
-	border-style: groove; 
-}
 .axis path,
 .axis line {
   fill: none;
@@ -41,6 +37,10 @@ Leander de Kraker
   z-index: 1;
   top: 10px;
   margin-left: 50px;
+}
+
+.col-md-6{
+	border-style: groove;
 }
 
 .onoffswitch {
