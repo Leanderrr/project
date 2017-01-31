@@ -140,6 +140,41 @@ Reality: <br>
 
 ## Week 3, day 5.
 
+- Presentation
+
 ## Week 4, day 1.
 
+Planned:<br>
+- Bootstrap<br>
+Reality:<br>
+- Bootstrap isn't helping much<br>
+
 ## Week 4, day 2
+
+Planned: <br>
+- Pause button.<br>
+- Position plots nicely.<br>
+Reality: <br>
+- Implemented pause function & button.<br>
+- Published GitHub site -> weird 404 bug. -> Disapeared, working now!<br>
+- Positioned plots.<br>
+
+## Week 4, day 3
+
+Planned: <br>
+- Finish positioning stuff.<br>
+- Add info buttons and info text.<br>
+- (Maybeee) Add hover over line that also appears on heatmap plot.<br>
+Reality: <br>
+
+## Week 4, day 4
+
+Planned: <br>
+- (Maybeee) Add hover over line that also appears on heatmap plot.<br>
+- Make report<br>
+- Practice presentation<br>
+
+## Week 4, day 5
+
+Presentation
+Ending!

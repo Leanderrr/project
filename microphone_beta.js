@@ -149,10 +149,23 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 		height = (height/numOct) - margin.top;
 		
 		var yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top, 0]);
-
+		
+		var noteFreqsi = [];
+		var noteNamesi = [];
+		
 		for (i=numOct; i>0; i--){
 			var Xlim = [freqBins[octaveIndexes[i]], freqBins[octaveIndexes[i+1]]];
 			xScale[i] = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right]);
+			
+			
+			// Save the note labels which occur on this axis
+			for (var j=0; j<noteFreqs.length; j++){
+				if (noteFreqs[j]>= Xlim[0] && noteFreqs[j]<= Xlim[1])
+				{
+					noteFreqsi.push(noteFreqs[j]);
+					noteNamesi.push(noteNames[j]);
+				}
+			}
 			
 			svg = d3.select('#FFT_plot').append('svg')
 			.attr('width',width)
@@ -168,8 +181,8 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 			// Axis properties
 			var xAxis = d3.svg.axis()
 				.scale(xScale[i])
-				.tickValues(noteFreqs)
-				.tickFormat(function(d,i){ return noteNames[i]})
+				.tickValues(noteFreqsi)
+				.tickFormat(function(d,i){ return noteNamesi[i]})
 				.orient("bottom");
 			var yAxis = d3.svg.axis()
 				.ticks(0)
@@ -185,9 +198,27 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 			  
 			svg.append("g")
 			  .attr("class", "y axis")
+			  .attr("transform", "translate(0," + (-10) + ")")
 			  .attr("id","y-axis")
 			  .call(yAxis)
 		}
+		d3.select('#FFT_plot').append("text")
+		  .attr("y", margin.left)
+		  .attr("dy", ".71em")
+		  .attr("x", width-margin.right*2)
+		  .style("text-anchor", "end")
+		  .style("font-size", "15px")
+		  .text("frequency (note)");
+		  
+		 
+		d3.select('#FFT_plot').append("text")
+			//.attr("transform", "rotate(-90)")
+			.attr("y", -margin.left)
+			.attr("dy", ".71em")
+			.style("text-anchor", "end")
+			.style("font-size", "15px")
+			.text("octave, amplitude");
+
 		
 	}
 	else if (FFTview == "linear"){
@@ -223,7 +254,6 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 		  .attr("transform", "translate(0," + ((height-margin.bottom)-margin.top) + ")")
 		  .call(xAxis)
 		.append("text")
-			//.attr("transform", "translate(0, " + -height + ")")
 			.attr("y", 25)
 			.attr("dy", ".71em")
 			.attr("x", width-margin.right*2)
@@ -237,7 +267,6 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 		  .attr("id","y-axis")
 		  .call(yAxis)
 		.append("text")
-			//.attr("transform", "translate(0, " + -height + ")")
 			.attr("transform", "rotate(-90)")
 			.attr("y", -margin.left)
 			.attr("dy", ".71em")
