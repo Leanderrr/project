@@ -159,17 +159,24 @@ Reality: <br>
 - Published GitHub site -> weird 404 bug. -> Disapeared, working now!<br>
 - Positioned plots.<br>
 
-## Week 4, day 3
+## Week 4, day 3: FEBRRUARY
 
 Planned: <br>
 - Finish positioning stuff.<br>
 - Add info buttons and info text.<br>
 - (Maybeee) Add hover over line that also appears on heatmap plot.<br>
 Reality: <br>
+- Finished position stuff.<br>
+- Added info buttons and text.<br>
+- Made the buttons nicer and more in-style.<br>
+- Added header.<br>
+
+![](doc/WIP_02_01.jpg)
 
 ## Week 4, day 4
 
 Planned: <br>
+- Maybe change info into a pop-up hover, because scrolling is no fun.
 - (Maybeee) Add hover over line that also appears on heatmap plot.<br>
 - Make report<br>
 - Practice presentation<br>

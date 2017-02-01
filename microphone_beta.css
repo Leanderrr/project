@@ -3,6 +3,12 @@ Leander de Kraker
 10423354
 */
 
+h1{
+	font-size: 30;
+	width: 95%;
+	margin:auto;
+}
+
 .container{
 	width: 95%;
     margin: auto;
@@ -12,10 +18,17 @@ Leander de Kraker
 	clear: both;
 }
 
-.subcontainer{
-	border-style: groove;
-	border-width: 2px;
-	border-color: #DDD;
+.info{
+	cursor: help;
+}
+
+.title{
+	font-size: 20px;
+	font-weight: bold;
+	width: 95%;
+	margin-left:5%;
+	margin-top: 5px
+
 }
 
 .axis path,
@@ -68,7 +81,7 @@ Leander de Kraker
 }
 .onoffswitch-inner {
     display: block; width: 200%; margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
+    transition: margin 0.1s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
     display: block; float: left; width: 50%; height: 17px; padding: 0; line-height: 17px;
@@ -76,14 +89,12 @@ Leander de Kraker
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-    content: "Smoothed";
     padding-left: 5px;
     background-color: #3590C4; color: ;
 }
 .onoffswitch-inner:after {
-    content: "Direct";
     padding-right: 5px;
-    background-color: #EEEEEE; color: ;
+    background-color: #EEEEEE; color: #3590C4;
     text-align: right;
 }
 .onoffswitch-switch {
@@ -92,11 +103,33 @@ Leander de Kraker
     position: absolute; top: 0; bottom: 0;
     right: 99px;
     border: 2px solid #999999; border-radius: 12px;
-    transition: all 0.3s ease-in 0s; 
+    transition: all 0.1s ease-in 0s; 
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
     margin-left: 0;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
+}
+#smoothingSwitch:before{
+	content: "Smoothed";
+}
+#smoothingSwitch:after{
+	content: "Direct signal";
+}
+
+#FFTviewSwitch:before{
+	content: "Stacked view";
+}
+#FFTviewSwitch:after{
+	content: "Linear view";
+}
+
+#buttonPause:before{
+    background-color: #A03535; color: ;
+	content: "Paused";
+}
+#buttonPause:after{
+    background-color: #3590C4; color: #EEEEEE;
+	content: "Playing";
 }

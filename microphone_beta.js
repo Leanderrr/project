@@ -43,15 +43,29 @@ function PauseChoice(){
 	}
 }
 // Add FFT view buttons function
-function FFTchoice(choice){
-	if (FFTview != choice){
-		console.log("CLICKED AND I NEED TO DO SOMETHINGGGA");
-		d3.selectAll(".FFT_svg").remove();
-		svg2 = init_FFT_plot(freqLims, freqBins, octaveIndexes, choice)
+function FFTchoice(){
+	if (FFTview  == "linear"){
+		FFTview  = "stacked";
+	} else {
+		FFTview  = "linear";
 	}
-	FFTview = choice;
-	console.log("CLICKEDWHOA AAAAA", choice);
+	d3.selectAll(".FFT_svg").remove();
+	svg2 = init_FFT_plot(freqLims, freqBins, octaveIndexes, FFTview)
 };
+
+function show_info(info){
+	var place = document.getElementById('infoDIV');
+	if (info == "GEN"){
+		var infoText = document.getElementById('General_info').innerHTML;
+	} else if (info == "FFT"){
+		var infoText = document.getElementById('FFT_info').innerHTML;
+	} else if (info == "RAW"){
+		var infoText = document.getElementById('raw_info').innerHTML;
+	} else if (info == "HEAT"){
+		var  infoText = document.getElementById('HEAT_info').innerHTML;
+	}
+	place.innerHTML = infoText;
+}
 
 // Create Frequency note labels
 var notesN = 88 // number of labels to make
@@ -148,7 +162,7 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 		numOct = octaveIndexes.length-2;
 		height = (height/numOct) - margin.top;
 		
-		var yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top, 0]);
+		var yScale = d3.scale.linear().domain([1, 300]).range([height-margin.top, 0]);
 		
 		var noteFreqsi = [];
 		var noteNamesi = [];
@@ -202,23 +216,6 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 			  .attr("id","y-axis")
 			  .call(yAxis)
 		}
-		d3.select('#FFT_plot').append("text")
-		  .attr("y", margin.left)
-		  .attr("dy", ".71em")
-		  .attr("x", width-margin.right*2)
-		  .style("text-anchor", "end")
-		  .style("font-size", "15px")
-		  .text("frequency (note)");
-		  
-		 
-		d3.select('#FFT_plot').append("text")
-			//.attr("transform", "rotate(-90)")
-			.attr("y", -margin.left)
-			.attr("dy", ".71em")
-			.style("text-anchor", "end")
-			.style("font-size", "15px")
-			.text("octave, amplitude");
-
 		
 	}
 	else if (FFTview == "linear"){
@@ -345,9 +342,9 @@ function init_FFT_heat_plot(xMax, yLim) {
 	// The colormap of the heatmap
 	var color = d3.scale.linear()
 		.domain([0, 100, 150, 200, 225, 255])
-		.range(["#000", "#600", "#910", "#B40", "#DA2", "#FF4"]) // Hot
+		//.range(["#000", "#600", "#910", "#B40", "#DA2", "#FF4"]) // Hot
 		//.range(["#FFF", "#CCF", "#BBF", "#99D", "#85B", "#905"]); // White blue
-//		.range(["#000", "#016", "#029", "#06B", "#4AD", "#CFF"]) // Black blue
+		.range(["#000", "#016", "#029", "#06B", "#4AD", "#CFF"]) // Black blue
 
 	return {"svg":svg, "xAxis":xAxis, "canvas":canvas, "color":color}
 }
@@ -598,7 +595,7 @@ var webaudio_tooling_obj = function () {
 				} else {
 					analyser_node.getByteFrequencyData(smoothing_array);
 					for (var i = 0; i<smoothing_array.length; i++){
-						array_freq[i] = (array_freq[i] + smoothing_array[i])/ 2;
+						array_freq[i] = ((array_freq[i] + smoothing_array[i])/ 2);
 					}
 				}
 				
@@ -612,8 +609,7 @@ var webaudio_tooling_obj = function () {
 				}
 				freq_matrix.shift(); // Remove oldest freq_bins_column
 				freq_matrix.push(image_slice); // Add new freq data
-				
-				console.log("smoothing = ", smoothing);
+
 				// draw the plots	
 				//plot_line(array_freq, 1,'frequency');
 				plot_line(time, array_time_signal); // Plot the raw input
