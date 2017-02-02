@@ -46,11 +46,12 @@ function PauseChoice(){
 function FFTchoice(){
 	if (FFTview  == "linear"){
 		FFTview  = "stacked";
+		svg2 = init_FFT_plot_stacked(freqLims, freqBins, octaveIndexes)
 	} else {
 		FFTview  = "linear";
+		svg2 = init_FFT_plot_linear(freqLims, freqBins)
 	}
 	d3.selectAll(".FFT_svg").remove();
-	svg2 = init_FFT_plot(freqLims, freqBins, octaveIndexes, FFTview)
 };
 
 function show_info(info){
@@ -152,95 +153,113 @@ function init_raw_plot(maxX) {
 }
 
 // INITIALIZE FFT PLOT
-function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
+function init_FFT_plot_linear(Xlim, freqBins) {
+	var width = 600
+		height = 450
+		margin = {top: 10, left: 50, bottom: 40, right: 30};
+	
+	var svg = d3.select('#FFT_plot').append('svg')
+	.attr('width',width)
+	.attr('height',height)
+	.attr('class', 'FFT_svg')
+	.attr('id','FFT_svg')
+	.append('g')
+		.attr('id', 'FFT_canvas')
+		.attr('width', width - margin.left - margin.right)
+		.attr('height',height - margin.top - margin.bottom)
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	var xScale = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right])
+	var	yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top - margin.bottom, 0]);
+
+	// Axis properties
+	var xAxis = d3.svg.axis()
+		.scale(xScale)
+		.tickValues(noteFreqs)
+		.tickFormat(function(d,i){if (i % 12 == 3){ return noteNames[i]}})
+		.orient("bottom");
+	var yAxis = d3.svg.axis()
+		.ticks(3)
+		.scale(yScale)
+		.orient("left");
+		
+	// Add x axis with label
+	svg.append("g")
+	  .attr("class", "x axis")
+	  .attr("id","x-axis")
+	  .attr("transform", "translate(0," + ((height-margin.bottom)-margin.top) + ")")
+	  .call(xAxis)
+	.append("text")
+		.attr("y", 25)
+		.attr("dy", ".71em")
+		.attr("x", width-margin.right*2)
+		.style("text-anchor", "end")
+		.style("font-size", "15px")
+		.text("frequency (note)");
+	
+	// Add y axis with label
+	svg.append("g")
+	  .attr("class", "y axis")
+	  .attr("id","y-axis")
+	  .call(yAxis)
+	.append("text")
+		.attr("transform", "rotate(-90)")
+		.attr("y", -margin.left)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.style("font-size", "15px")
+		.text("amplitude");
+
+return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
+}
+
+function init_FFT_plot_stacked(Xlim, freqBins, octaveIndexes){
 	var width = 600
 		height = 450
 		margin = {top: 10, left: 50, bottom: 40, right: 30};
 	
 	var xScale = [];
-	if (FFTview == "stacked"){
 		numOct = octaveIndexes.length-2;
 		height = (height/numOct) - margin.top;
+	
+	var yScale = d3.scale.linear().domain([1, 300]).range([height-margin.top, 0]);
+	
+	var noteFreqsi = [];
+	var noteNamesi = [];
+	
+	for (i=numOct; i>0; i--){
+		var Xlim = [freqBins[octaveIndexes[i]], freqBins[octaveIndexes[i+1]]];
+		xScale[i] = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right]);
 		
-		var yScale = d3.scale.linear().domain([1, 300]).range([height-margin.top, 0]);
 		
-		var noteFreqsi = [];
-		var noteNamesi = [];
-		
-		for (i=numOct; i>0; i--){
-			var Xlim = [freqBins[octaveIndexes[i]], freqBins[octaveIndexes[i+1]]];
-			xScale[i] = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right]);
-			
-			
-			// Save the note labels which occur on this axis
-			for (var j=0; j<noteFreqs.length; j++){
-				if (noteFreqs[j]>= Xlim[0] && noteFreqs[j]<= Xlim[1])
-				{
-					noteFreqsi.push(noteFreqs[j]);
-					noteNamesi.push(noteNames[j]);
-				}
+		// Save the note labels which occur on this axis
+		for (var j=0; j<noteFreqs.length; j++){
+			if (noteFreqs[j]>= Xlim[0] && noteFreqs[j]<= Xlim[1])
+			{
+				noteFreqsi.push(noteFreqs[j]);
+				noteNamesi.push(noteNames[j]);
 			}
-			
-			svg = d3.select('#FFT_plot').append('svg')
-			.attr('width',width)
-			.attr('height',height)
-			.attr('class', 'FFT_svg')
-			.attr('id','FFT_svg' + i)
-			.append('g')
-				.attr('id', 'FFT_canvas' + i)
-				.attr('width', width - margin.left - margin.right)
-				.attr('height',height - margin.top - margin.bottom)
-				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-			
-			// Axis properties
-			var xAxis = d3.svg.axis()
-				.scale(xScale[i])
-				.tickValues(noteFreqsi)
-				.tickFormat(function(d,i){ return noteNamesi[i]})
-				.orient("bottom");
-			var yAxis = d3.svg.axis()
-				.ticks(0)
-				.scale(yScale)
-				.orient("left");
-				
-			// Add x axis with label
-			svg.append("g")
-			  .attr("class", "x axis")
-			  .attr("id","x-axis")
-			  .attr("transform", "translate(0," + (height-30) + ")")
-			  .call(xAxis)
-			  
-			svg.append("g")
-			  .attr("class", "y axis")
-			  .attr("transform", "translate(0," + (-10) + ")")
-			  .attr("id","y-axis")
-			  .call(yAxis)
 		}
 		
-	}
-	else if (FFTview == "linear"){
-		var svg = d3.select('#FFT_plot').append('svg')
+		svg = d3.select('#FFT_plot').append('svg')
 		.attr('width',width)
 		.attr('height',height)
 		.attr('class', 'FFT_svg')
-		.attr('id','FFT_svg')
+		.attr('id','FFT_svg' + i)
 		.append('g')
-			.attr('id', 'FFT_canvas')
+			.attr('id', 'FFT_canvas' + i)
 			.attr('width', width - margin.left - margin.right)
 			.attr('height',height - margin.top - margin.bottom)
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 		
-		xScale = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right])
-		var	yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top - margin.bottom, 0]);
-
 		// Axis properties
 		var xAxis = d3.svg.axis()
-			.scale(xScale)
-			.tickValues(noteFreqs)
-			.tickFormat(function(d,i){if (i % 12 == 3){ return noteNames[i]}})
+			.scale(xScale[i])
+			.tickValues(noteFreqsi)
+			.tickFormat(function(d,i){ return noteNamesi[i]})
 			.orient("bottom");
 		var yAxis = d3.svg.axis()
-			.ticks(3)
+			.ticks(0)
 			.scale(yScale)
 			.orient("left");
 			
@@ -248,33 +267,19 @@ function init_FFT_plot(Xlim, freqBins, octaveIndexes, FFTview) {
 		svg.append("g")
 		  .attr("class", "x axis")
 		  .attr("id","x-axis")
-		  .attr("transform", "translate(0," + ((height-margin.bottom)-margin.top) + ")")
+		  .attr("transform", "translate(0," + (height-30) + ")")
 		  .call(xAxis)
-		.append("text")
-			.attr("y", 25)
-			.attr("dy", ".71em")
-			.attr("x", width-margin.right*2)
-			.style("text-anchor", "end")
-			.style("font-size", "15px")
-			.text("frequency (note)");
-		
-		// Add y axis with label
+		  
 		svg.append("g")
 		  .attr("class", "y axis")
+		  .attr("transform", "translate(0," + (-10) + ")")
 		  .attr("id","y-axis")
 		  .call(yAxis)
-		.append("text")
-			.attr("transform", "rotate(-90)")
-			.attr("y", -margin.left)
-			.attr("dy", ".71em")
-			.style("text-anchor", "end")
-			.style("font-size", "15px")
-			.text("amplitude");
-	};
+		
+	}
 	
 	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
 }
-
 
 // INITIALIZE FFT heatmap PLOT
 function init_FFT_heat_plot(xMax, yLim) {
@@ -374,61 +379,61 @@ function plot_line(time, given_typed_array){
 		  .attr("d", line);
 }
 
-// Plot the FFT
-function plot_FFT(freq_bins, freq_values, octaveIndexes, FFTview){
-	// Spiral FFT view selected
-	if (FFTview == "stacked"){
-		for (i=0; i < octaveIndexes.length-1; i++){
-			freq_binsi = freq_bins.slice(octaveIndexes[i], octaveIndexes[i+1]+1);
-			valuesi = freq_values.slice(octaveIndexes[i], octaveIndexes[i+1]+1);
-			var area = d3.svg.area()
-			.x(function(d, j){
-				return svg2.xScale[i](freq_binsi[j])
-			})
-			.y0(svg2.height-svg2.margin.top)
-			.y1(function(d, j){
-				vali = valuesi[j]-50
-				if (vali < 0){
-					return(svg2.height-svg2.margin.top)}
-					
-				else{
-					return svg2.yScale(vali)
-				}
-			})
-			
-			d3.select("#FFT_line"+i).remove()
-			d3.select("#FFT_svg"+i).append("path")
-			  .attr("transform","translate(" + svg2.margin.left + "," + (-svg2.margin.top) + ")")
-			  .data([freq_binsi, valuesi])
-			  .attr("class", "area")
-			  .attr("id", "FFT_line"+i)
-			  .attr("d", area);
-		}
-	}
-	// Linear view selected
-	else{
-		var  area = d3.svg.area()
-		.x(function(d, i) {
-			return svg2.xScale(freq_bins[i])
+// Plot the FFT freq data
+function plot_FFT_stacked(freq_bins, freq_values, octaveIndexes){
+// stacked FFT view selected
+	for (i=0; i < octaveIndexes.length-1; i++){
+		freq_binsi = freq_bins.slice(octaveIndexes[i], octaveIndexes[i+1]+1);
+		valuesi = freq_values.slice(octaveIndexes[i], octaveIndexes[i+1]+1);
+		var area = d3.svg.area()
+		.x(function(d, j){
+			return svg2.xScale[i](freq_binsi[j])
 		})
-		.y0(svg2.height-svg2.margin.bottom-svg2.margin.top)
-		.y1(function(d, i) {
-			//console.log(freq_values[i])
-			vali = freq_values[i]-50
+		.y0(svg2.height-svg2.margin.top)
+		.y1(function(d, j){
+			vali = valuesi[j]-50
 			if (vali < 0){
-				return(svg2.height-svg2.margin.bottom-svg2.margin.top)}
+				return(svg2.height-svg2.margin.top)}
+				
 			else{
 				return svg2.yScale(vali)
 			}
 		})
-		svg2.svg.select("#FFT_line").remove()
-		svg2.svg.append("path")
-		  .data([freq_bins, freq_values])
+		
+		d3.select("#FFT_line"+i).remove()
+		d3.select("#FFT_svg"+i).append("path")
+		  .attr("transform","translate(" + svg2.margin.left + "," + (-svg2.margin.top) + ")")
+		  .data([freq_binsi, valuesi])
 		  .attr("class", "area")
-		  .attr("id", "FFT_line")
+		  .attr("id", "FFT_line"+i)
 		  .attr("d", area);
-	};
+	}
 }
+
+function plot_FFT_linear(freq_bins, freq_values){
+	// Plot FFT plot data for linear view
+	var  area = d3.svg.area()
+	.x(function(d, i) {
+		return svg2.xScale(freq_bins[i])
+	})
+	.y0(svg2.height-svg2.margin.bottom-svg2.margin.top)
+	.y1(function(d, i) {
+		//console.log(freq_values[i])
+		vali = freq_values[i]-50
+		if (vali < 0){
+			return(svg2.height-svg2.margin.bottom-svg2.margin.top)}
+		else{
+			return svg2.yScale(vali)
+		}
+	})
+	svg2.svg.select("#FFT_line").remove()
+	svg2.svg.append("path")
+	  .data([freq_bins, freq_values])
+	  .attr("class", "area")
+	  .attr("id", "FFT_line")
+	  .attr("d", area);
+}
+
 
 function plot_heatmap(freq_matrix, xMax, yMax){
 	context = svg3.canvas.node().getContext("2d"),
@@ -460,6 +465,7 @@ var webaudio_tooling_obj = function () {
 	for  (var i = 0; i < BUFF_SIZE; i++) {
 	   time.push(i/sRate*1000);
 	}
+	freqBins.push(1*sRate/BUFF_SIZE);
 	for  (var i = 1; i < binCount; i++) {
 	   freqBins.push(Math.round(i * sRate/BUFF_SIZE));
 	}
@@ -481,7 +487,7 @@ var webaudio_tooling_obj = function () {
 	var search = 3; // Search for C's which begin at the 3th notename index
 	for (var i = 0; i < binCount; i++){
 		if (freqBins[i] >= noteFreqs[search]){
-			octaveIndexes.push(i);
+			octaveIndexes.push(i-1);
 			search += 12; // Search for next octave
 		}
 	}
