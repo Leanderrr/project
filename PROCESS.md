@@ -11,6 +11,16 @@ Process book for the programming minor eindproject.
 - Finish design file.<br>
 - Look at more examples for audio recording code.<br>
 -  Make my own microphone recording webpage.<br>
+- [This page](https://webaudiodemos.appspot.com/input/index.html) convinced me that the project can in theory work in realtime in javascript and HTML.
+But the frequency data does not look good; the low frequencies are always dominating and you can't really see the frequency change when you do music.
+This is because the frequency axis is linear, and the analysis time is very short so not enough sound is taken to really see how much the low frequencies are present.
+
+![](doc/Realtime_Audio_Example.png)
+
+- The Spectratune software and [the creators site](http://nasmusicsoft.com/) are still my big inspiration.
+
+![](doc/spectratune.png)
+
 
 ## Week 1, day 4. 2017-1-12
 
@@ -33,6 +43,8 @@ Planned:<br>
 Reality:<br>
 - We put almost all our time into the presentation<br>
 - Timing doesn't seem to be necissary.<br>
+- The volume seems to scale quite logarithmically, so high enough values are easy to reach in almost all cases. 
+I start to think adding a gain slider might not be necissary.
 
 ## Week 2, day 1. 2017-1-16
 
@@ -135,6 +147,8 @@ Reality: <br>
 - Made the axis prettier.<br>
 - Implemented stacking of FFT results!<br>
 - Implemented temporal walking average smoothing with switch button!<br>
+- Decided Spiral plot with each rotation being an octave is not going to happen in D3. 
+Luckily the linear view is looking good already, so that can be used as a second plot.
 
 ![](doc/WIP_01_26.jpg)
 
@@ -147,7 +161,7 @@ Reality: <br>
 Planned:<br>
 - Bootstrap<br>
 Reality:<br>
-- Bootstrap isn't helping much<br>
+- Bootstrap isn't helping much, I do not like the results and how much you need to add to get those results.<br>
 
 ## Week 4, day 2
 
@@ -176,10 +190,16 @@ Reality: <br>
 ## Week 4, day 4
 
 Planned: <br>
-- Maybe change info into a pop-up hover, because scrolling is no fun.
+- Maybe change info into a pop-up hover, because scrolling is no fun.<br>
 - (Maybeee) Add hover over line that also appears on heatmap plot.<br>
 - Make report<br>
 - Practice presentation<br>
+Reality: <br>
+- Wrote report. <br> 
+- Fixed little bug that caused the frequency data to be shifted one bin, 
+causing sounds to look as if they were a little bit to high in frequency. This was caused because the frequency axis goes from zero to higher, 
+but taking log(0) crashes D3, so I deleted that bin, shifting the frequency data on the x-axis. To fix it I added another bin with the first frequency as value. <br>
+- Changed the way of cutting the octaves for stacking the frequency plot, so now the notes appear more in straight columns.
 
 ## Week 4, day 5
 

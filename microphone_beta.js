@@ -4,7 +4,7 @@ Leander de Kraker
 This File contains the code to run the AUDIO VISUALIZER.
 It uses the getUserMedia and webAudio API, and D3.
 
-beta version 2
+beta version 6
 */
 
 // Audio buffer size
@@ -23,9 +23,9 @@ var smoothing = 0;
 var pause = 0;
 
 // Standard FFT view
-var FFTview = "linear"
-var freqBins = [];
-var octaveIndexes = [];
+var FFTview = "linear",
+	freqBins = [],
+	octaveIndexes = [];
 
 // Add function for smoothing
 function smoothingToggle(){
@@ -37,19 +37,20 @@ function smoothingToggle(){
 }
 
 // Pause/ play Button functionality
-function PauseChoice(){
+function pauseChoice(){
 	if (pause == 0){
 		pause = 1;
 	} else {
 		pause = 0;
 	}
 }
+
 // FFT view buttons function
 function FFTchoice(){
 	if (FFTview  == "linear"){
 		FFTview  = "stacked";
-		d3.selectAll(".FFT_svg").remove();
-		svg2 = init_FFT_plot_stacked(freqLims, freqBins, octaveIndexes)
+		d3.selectAll(".FFT_svg").remove();	
+		svg2 = init_FFT_plot_stacked(freqLims, freqBins, octaveIndexes)		
 	} else {
 		FFTview  = "linear";
 		d3.selectAll(".FFT_svg").remove();
@@ -78,7 +79,6 @@ var notesN = 88 // number of labels to make
 	noteNamesExample = ["A", "", "B", "C", "", "D", "", "E", "F", "", "G", ""]
 	noteFreqs = [27.5] // A0 = 27.5Hz
 	interval = Math.pow(2, 1/12) // A half step is 12th root of 2 increase in frequency
-	octaveLength = noteNamesExample.length
 	octaveN = 0;
 for (var i = 0; i < notesN; i++){
 	// Add frequency i 
@@ -86,12 +86,11 @@ for (var i = 0; i < notesN; i++){
 	noteFreqs.push(freqi);
 	
 	// Add name i
-	nami = noteNamesExample[i % octaveLength];
+	nami = noteNamesExample[i % noteNamesExample.length];
 	if (nami == "C"){
 		octaveN += 1;
-		nami = nami + octaveN;
+		nami = nami + octaveN;	
 	};
-
 	noteNames.push(nami)
 };
 
@@ -171,7 +170,7 @@ function init_raw_plot(maxX) {
 	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
 }
 
-// INITIALIZE FFT PLOT
+// INITIALIZE FFT plot linear view
 function init_FFT_plot_linear(Xlim, freqBins) {
 	var width = 600
 		height = 450
@@ -188,8 +187,8 @@ function init_FFT_plot_linear(Xlim, freqBins) {
 		.attr('height',height - margin.top - margin.bottom)
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	
-	var xScale = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right])
-	var	yScale = d3.scale.linear().domain([1, 300]).range([height - margin.top - margin.bottom, 0]);
+	var xScale = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right]);
+	var	yScale = d3.scale.linear().domain([1, 200]).range([height - margin.top - margin.bottom, 0]);
 
 	// Axis properties
 	var xAxis = d3.svg.axis()
@@ -232,6 +231,7 @@ function init_FFT_plot_linear(Xlim, freqBins) {
 return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
 }
 
+// INITIALIZE FFT plot stacked view
 function init_FFT_plot_stacked(Xlim, freqBins, octaveIndexes){
 	var width = 600
 		height = 450
@@ -294,7 +294,6 @@ function init_FFT_plot_stacked(Xlim, freqBins, octaveIndexes){
 		  .attr("transform", "translate(0," + (-10) + ")")
 		  .attr("id","y-axis")
 		  .call(yAxis)
-		
 	}
 	
 	return {"svg":svg,"xAxis":xAxis,"yAxis":yAxis,"xScale":xScale,"yScale":yScale, "height":height, "margin":margin}
@@ -341,9 +340,7 @@ function init_FFT_heat_plot(xMax, yLim) {
 	  .attr("class", "x axis")
 	  .attr("transform", "translate(" + margin.left + "," + (height-margin.bottom) + ")")
 	  .call(xAxis)
-	.append("text")
-		//.attr("transform", "translate(0, " + -height + ")")
-		.attr("y", 25)
+	.append("text")		.attr("y", 25)
 		.attr("dy", ".71em")
 		.attr("x", width-margin.right*2)
 		.style("text-anchor", "end")
@@ -354,9 +351,7 @@ function init_FFT_heat_plot(xMax, yLim) {
 	  .attr("class", "y axis")
 	  .attr("transform", "translate(" + margin.left +"," + margin.top + ")")
 	  .call(yAxis)
-	  .append("text")
-		//.attr("transform", "translate(0, " + -height + ")")
-		.attr("transform", "rotate(-90)")
+	  .append("text")		.attr("transform", "rotate(-90)")
 		.attr("y", -margin.left)
 		.attr("dy", ".71em")
 		.style("text-anchor", "end")
@@ -373,14 +368,16 @@ function init_FFT_heat_plot(xMax, yLim) {
 	return {"svg":svg, "xAxis":xAxis, "canvas":canvas, "color":color}
 }
 
-// Call when the number of columns is changed of the heatmap
+
+// Change number of columns on the heatmap
 function redraw_FFT_heat_plot(xMax){
 	svg3.svg.remove();
 	svg3.canvas.remove();
-	svg3 =  init_FFT_heat_plot(nCols, freqLims);
+	svg3 = init_FFT_heat_plot(nCols, freqLims);
 }
 
 
+// --------- PLOT UPDATING/ DRAWING FUNCTIONS ---------------
 // Plot the raw input
 function plot_line(time, given_typed_array){
 	var line = d3.svg.line()
@@ -399,8 +396,32 @@ function plot_line(time, given_typed_array){
 }
 
 // Plot the FFT freq data
+function plot_FFT_linear(freq_bins, freq_values){
+	// Plot FFT plot data for linear view
+	var  area = d3.svg.area()
+	.x(function(d, i) {
+		return svg2.xScale(freq_bins[i])
+	})
+	.y0(svg2.height-svg2.margin.bottom-svg2.margin.top)
+	.y1(function(d, i) {
+		//console.log(freq_values[i])
+		vali = freq_values[i]-80
+		if (vali < 0){
+			return(svg2.height-svg2.margin.bottom-svg2.margin.top)}
+		else{
+			return svg2.yScale(vali)
+		}
+	})
+	svg2.svg.select("#FFT_line").remove()
+	svg2.svg.append("path")
+	  .data([freq_bins, freq_values])
+	  .attr("class", "area")
+	  .attr("id", "FFT_line")
+	  .attr("d", area);
+}
+
 function plot_FFT_stacked(freq_bins, freq_values, octaveIndexes){
-// stacked FFT view selected
+	// stacked FFT view selected
 	for (i=0; i < octaveIndexes.length-1; i++){
 		freq_binsi = freq_bins.slice(octaveIndexes[i], octaveIndexes[i+1]+1);
 		valuesi = freq_values.slice(octaveIndexes[i], octaveIndexes[i+1]+1);
@@ -410,7 +431,7 @@ function plot_FFT_stacked(freq_bins, freq_values, octaveIndexes){
 		})
 		.y0(svg2.height-svg2.margin.top)
 		.y1(function(d, j){
-			vali = valuesi[j]-50
+			vali = valuesi[j]-80
 			if (vali < 0){
 				return(svg2.height-svg2.margin.top)}
 				
@@ -429,31 +450,8 @@ function plot_FFT_stacked(freq_bins, freq_values, octaveIndexes){
 	}
 }
 
-function plot_FFT_linear(freq_bins, freq_values){
-	// Plot FFT plot data for linear view
-	var  area = d3.svg.area()
-	.x(function(d, i) {
-		return svg2.xScale(freq_bins[i])
-	})
-	.y0(svg2.height-svg2.margin.bottom-svg2.margin.top)
-	.y1(function(d, i) {
-		//console.log(freq_values[i])
-		vali = freq_values[i]-50
-		if (vali < 0){
-			return(svg2.height-svg2.margin.bottom-svg2.margin.top)}
-		else{
-			return svg2.yScale(vali)
-		}
-	})
-	svg2.svg.select("#FFT_line").remove()
-	svg2.svg.append("path")
-	  .data([freq_bins, freq_values])
-	  .attr("class", "area")
-	  .attr("id", "FFT_line")
-	  .attr("d", area);
-}
 
-
+// Create the image heatmap and show it
 function plot_heatmap(freq_matrix, xMax, yMax){
 	context = svg3.canvas.node().getContext("2d"),
 	image = context.createImageData(xMax, yMax);
@@ -507,13 +505,6 @@ var webaudio_tooling_obj = function () {
 	svg1 = init_raw_plot(time[time.length-1]);
 	svg2 = init_FFT_plot_linear(freqLims, freqBins);
 	svg3 = init_FFT_heat_plot(nCols, freqLims);
-	
-	var audioInput = null,
-    microphone_stream = null,
-    gain_node = null,
-    script_processor_node = null,
-    script_processor_analysis_node = null,
-    analyser_node = null;
 
 	// Set the user media version for different browsers
     if (!navigator.getUserMedia){
@@ -536,38 +527,36 @@ var webaudio_tooling_obj = function () {
 	// Original audio is only available in this function.
     function start_microphone(stream){
 	
-        gain_node = audioContext.createGain();
+        var gain_node = audioContext.createGain();
         gain_node.connect( audioContext.destination );
 
-        microphone_stream = audioContext.createMediaStreamSource(stream);
+        var microphone_stream = audioContext.createMediaStreamSource(stream);
 
 		// Enable increase and decrease of number of bins of FFT heatmap
         document.getElementById('historyLength').addEventListener('change', function(){
-			if (this.value > nCols){
-				var extra = this.value - nCols
-				var filler = new Uint8Array(nBins)
+			if (this.value > nCols){ // Add extra columns to the matrix
+				var extra = this.value - nCols,
+					filler = new Uint8Array(nBins);
 				for (var i = 0; i<extra; i++){
-					freq_matrix.unshift(filler)
+					freq_matrix.unshift(filler);
 				}
 			}
-			else{
+			else{ // Delete columns of the matrix
 				var toDelete = nCols - this.value;
 				for (var i = 0; i<toDelete; i++){
-					freq_matrix.shift()
+					freq_matrix.shift();
 				}
 			}
-			console.log("original: ", nCols)
 			nCols = this.value
-			console.log("set to:   ", this.value);
 			redraw_FFT_heat_plot(nCols, svg3)
 			plot_heatmap(freq_matrix, nCols, nBins);
 		});
 
         // --- setup FFT
-        script_processor_analysis_node = audioContext.createScriptProcessor(BUFF_SIZE, 1, 1);
+        var script_processor_analysis_node = audioContext.createScriptProcessor(BUFF_SIZE, 1, 1);
         script_processor_analysis_node.connect(gain_node);
 		
-        analyser_node = audioContext.createAnalyser();
+        var analyser_node = audioContext.createAnalyser();
         analyser_node.smoothingTimeConstant = 0;
         analyser_node.fftSize = BUFF_SIZE;
 
@@ -585,33 +574,35 @@ var webaudio_tooling_obj = function () {
         var array_time_signal = new Uint8Array(BUFF_SIZE);
 		
 		script_processor_analysis_node.onaudioprocess =  function() {
-			if ((microphone_stream.playbackState == microphone_stream.PLAYING_STATE) && (pause == 0)) {
-				
-				// With no smoothing: update array_freq with the newest Frequency data
-				// With smoothing: Use smoothing array to update array_freq with an average of the two
-				if (smoothing == 0){
-					analyser_node.getByteFrequencyData(array_freq);
-				} else {
-					analyser_node.getByteFrequencyData(smoothing_array);
-					for (var i = 0; i<smoothing_array.length; i++){
-						array_freq[i] = ((array_freq[i] + smoothing_array[i])/ 2);
+			if (microphone_stream.playbackState == microphone_stream.PLAYING_STATE) {
+				if (pause == 0){
+					// With no smoothing: update array_freq with the newest Frequency data
+					// With smoothing: Use smoothing array to update array_freq with an average of the two
+					if (smoothing == 0){
+						analyser_node.getByteFrequencyData(array_freq);
+					} else {
+						analyser_node.getByteFrequencyData(smoothing_array);
+						for (var i = 0; i<smoothing_array.length; i++){
+							array_freq[i] = ((array_freq[i] + smoothing_array[i])/ 2);
+						}
 					}
-				}
-				
-				// The latest buffer data
-				analyser_node.getByteTimeDomainData(array_time_signal);
-				
-				// Add FFT results to frequency matrix
-				image_slice = [];
-				for (i = 0; i < CompressTo; i++) {
-				  image_slice.unshift(array_freq[freqIndexes[i]]);
-				}
-				freq_matrix.shift(); // Remove oldest freq_bins_column
-				freq_matrix.push(image_slice); // Add new freq data
+					
+					// The latest buffer data
+					analyser_node.getByteTimeDomainData(array_time_signal);
+					
+					// Add FFT results to frequency matrix
+					image_slice = [];
+					for (i = 0; i < CompressTo; i++) {
+					  image_slice.unshift(array_freq[freqIndexes[i]]);
+					}
+					freq_matrix.shift(); // Remove oldest freq_bins_column
+					freq_matrix.push(image_slice); // Add new freq data
 
-				// draw the plots	
-				plot_line(time, array_time_signal);
-				plot_heatmap(freq_matrix, nCols, nBins);
+					// draw the plots	
+					plot_line(time, array_time_signal);
+					plot_heatmap(freq_matrix, nCols, nBins);
+				}
+				// FFT plot should get updated even when paused so you can switch views while paused.
 				if (FFTview == "stacked"){
 					plot_FFT_stacked(freqBins, array_freq, octaveIndexes);
 				} else {
@@ -620,5 +611,4 @@ var webaudio_tooling_obj = function () {
 			}
 		};
     }
-
-}(); //  webaudio_tooling_obj = function()
+}();

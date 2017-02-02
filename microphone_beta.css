@@ -4,7 +4,7 @@ Leander de Kraker
 */
 
 h1{
-	font-size: 30;
+	font-size: 35;
 	width: 95%;
 	margin:auto;
 }
@@ -124,7 +124,6 @@ h1{
 #FFTviewSwitch:after{
 	content: "Linear view";
 }
-
 #buttonPause:before{
     background-color: #A03535; color: ;
 	content: "Paused";

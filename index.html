@@ -17,9 +17,12 @@
 		<ul>
 		  <li>Try to sing as high or as low as someone else</li>
 		  <li>Wistle (wistling produces a pure sinus, unlike other instruments or singing)</li>
-		  <li>try to sing certain intervals</li>
+		  <li>try to sing certain intervals (use stacked frequency view to see specific notes)</li>
 		  <li>Look at how the overtones change when you close or open your mouth while singing</li>
+		  <li>See which overtones appear when hitting a single note</li>
 		</ul>
+		
+		Additional info on musical sound analysis:  <a href="http://nasmusicsoft.com/Spectratune.php">Spectratune</a>
 		
 	</div>
 	<p id="raw_info" style="visibility:hidden; height: 0px">
@@ -65,7 +68,7 @@
 				</div>
 				<br>
 				<div class="onoffswitch">
-					<input type="checkbox" class="onoffswitch-checkbox" id="pauseInput" onclick='PauseChoice()'>
+					<input type="checkbox" class="onoffswitch-checkbox" id="pauseInput" onclick='pauseChoice()'>
 					<label class="onoffswitch-label" for="pauseInput">
 						<span id="buttonPause" class="onoffswitch-inner"></span>
 						<span class="onoffswitch-switch"></span>
@@ -94,7 +97,7 @@
 		<div class="subcontainer" style="width:600px; float:right;">
 			<div class="optioncontainer" style="height: 100px">
 				<p>Saved time</p>
-				<input id="historyLength" type="range" min="12" max="39" step="1" value="20"/>
+				<input id="historyLength" type="range" min="12" max="49" step="1" value="20"/>
 			</div>
 			<p class="title">Sound frequency through time
 				<a class="info" style="float:right;" onclick='show_info("HEAT")'><img src="small_info_icon.png"/></a>
@@ -104,7 +107,6 @@
 				 <div id="heatmap_axis"></div>
 				 <div id="heatmap_canvas"></div>
 			</div>
-			
 		</div>
 
 	</div>
