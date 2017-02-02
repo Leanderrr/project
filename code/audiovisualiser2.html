@@ -56,7 +56,7 @@
 
 	<header><h1>
 		Sound Visualiser
-		<a class="info" style="float:right;" onclick='show_info("GEN")'><img src="code/small_info_icon.png"/></a>
+		<a class="info" style="float:right;" onclick='show_info("GEN")'><img src="small_info_icon.png"/></a>
 	</h1></header>
 
 	
@@ -89,7 +89,7 @@
 				</div>
 			</div>
 			<p class="title">Sound frequency
-				<a class="info"  style="float:right;" onclick='show_info("FFT")'><img src="code/small_info_icon.png"/></a>
+				<a class="info"  style="float:right;" onclick='show_info("FFT")'><img src="small_info_icon.png"/></a>
 			</p>
 			
 			<div id="FFT_DIV" style='width: 600px; height: 450px;'>
@@ -101,10 +101,10 @@
 		<div class="subcontainer" style="width:600px; float:right;">
 			<div class="optioncontainer" style="height: 100px">
 				<p>Saved time</p>
-				<p>10<input id="historyLength" type="range" min="10" max="49" step="1" value="20"/>49 columns</p>
+				<input id="historyLength" type="range" min="12" max="49" step="1" value="20"/>
 			</div>
 			<p class="title">Sound frequency through time
-				<a class="info" style="float:right;" onclick='show_info("HEAT")'><img src="code/small_info_icon.png"/></a>
+				<a class="info" style="float:right;" onclick='show_info("HEAT")'><img src="small_info_icon.png"/></a>
 			</p>
 			
 			<div id="heatmap_DIV" style='width: 600px; height: 450px;'>
@@ -117,7 +117,7 @@
 	<div class="container">	
 		<div class="subcontainer" style="width:600px; height: 300px; float: left;">
 			<p class="title">Sound raw signal
-				<a class="info" style="float:right;" onclick='show_info("RAW")'><img src="code/small_info_icon.png"/></a>
+				<a class="info" style="float:right;" onclick='show_info("RAW")'><img src="small_info_icon.png"/></a>
 			</p>
 			
 			<div id="raw_plot"></div>
@@ -131,8 +131,8 @@
 	</div>
 	
 
-	<link rel="stylesheet" type="text/css" href="code/audiovisualiser.css"/>
+	<link rel="stylesheet" type="text/css" href="audiovisualiser.css"/>
 	<script src="https://d3js.org/d3.v3.min.js"></script>
-	<script src="code/audiovisualiser.js"></script>
+	<script src="audiovisualiser.js"></script>
 </body>
 </html>

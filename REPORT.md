@@ -1,17 +1,15 @@
-# Project
 
 > Name: Leander de Kraker<br>
 > Stnr: 10423354<br>
-> Date: 2017-1-9<br>
+> Date: 2017-2-2<br>
 
-## Problem definition
 
 The program uses the user's microphone to visualise the sound signal of the microphone. 
 It also applies a Fast Fourier Transformation (FFT), this shows the user which sound frequencies are present in the sound. 
 Frequency in Hz is be replaced by note names of musical instruments: A - G. This enables the user to see what notes are being played in music easily.
 
 
-![](doc/My_visualisation.png)
+![](doc/My_Visualisation.png)
 
 
 #### Questions the program can answer for the user.
@@ -20,9 +18,7 @@ Frequency in Hz is be replaced by note names of musical instruments: A - G. This
 - Can I sing what I hear?
 - Which notes are being played (and when) in the music that I hear?
 - What is the difference in sound spectrum when comparing, guitar, flute, piano and cello for example?
-- Is my guitar in tune?
 - Can I learn how to sing a particular note or note interval? (great potential for relative ear training)
-- How does my basilar membrane vibrate (roughly) when there is sound?
 
 
 ## Technical Design
@@ -86,33 +82,35 @@ Now the variable which will be continuously updated by the WebAudioApi are initi
 
 The GetUserMedia version gets checked so there is less chance of a crash.
 
-Now the audio stream is started, this calls start\_microphone.
-start\_microphone creates the required WebAudio nodes to capture the sound into a buffer and do the FFT transform.
-These nodes are connected to each other so they can alter the audio object in the desired way.
+Now the audio stream is started, this calls start\_microphone.<br>
+start\_microphone creates the required WebAudio nodes to capture the sound into a buffer and do the FFT transform.<br>
+These nodes are connected to each other so they can alter the audio object in the desired way.<br>
 The arrays and matrix in which the FFT results will be saved are created using 8bit integers. The smoothing array is used to temporarily hold the newest FFT results so an average between the newest and the previous 
-can be taken.
+can be taken.<br>
 One of the nodes has an audioprocess with a custom anonymous function which gets called the entire time.
-If the buffer is full, and the pause is not activated, the audio nodes retreive the time domain and frequency domain data.
+If the buffer is full, and the pause is not activated, the audio nodes retreive the time domain and frequency domain data.<br>
 Finally, the data for the plots is (re)plotted. 
 Even if the pause is activated, the FFT plot is getting (re)plotted, so the data does not dissapear when you switch FFT views while paused.
 
 
 ## Challenges
+
+When I was wondering if my idea was possible to implement I did think of a back-up project. I wanted to create a miniature solar system with the planets orbiting the sun (with orbit eccentricity perhaps? (I don't know about that)) -> click on planet: see moons of planet orbiting in new plot and athmosphere composition -> 
+Click on moon: see moon athmosphere composition. Extra option: enable planets to scale (turn all planets into little dots and even the orbits of the moons are too small to see).
+
+
 It was difficult to understand what happens in the webAudioAPI or getUserMedia. everything on the internet seems to use one example.<br>
 
-
 To plot the FFT results with the correct frequency and note names on the axis, I had to calculate and think of all the axis properties and values myself. There were no examples for this. I'm happy with how it turned out.
-
 
 The D3 plots were quite unique. <br>
 I've used the [very best and only nice D3 heatmap](https://bl.ocks.org/mbostock/3074470) I could find, luckily that one worked for me, although this example starts 
 its colormapping at position -1, this causes all color channels to be wrong (expected RGB \(\alpha) -> got \alpha RGB). This can be seen in the WIP picture of week 2 day 4, where I already coded a black to redwhite colormap, that was misinterpreted as a white, blue, invisible colormap.<br>
 
 The upsides of the spiral plot in [spectratune](http://nasmusicsoft.com/Spectratune.php) are: <br>
-(1) The line is continuous as you would want it, but <br>
-(2) because of the circling the axis can be longer than if the axis were straight, so individual notes are able .<br>
-(3) The same note is always on the same degree (the lines with notenames could extend from the centre straight outward), one octave is exactly one spiral rotation.<br>
-(4) It resembles the cochlea, which is awesome and makes it more thought provoking. (If I were implement one spiral it would also make the other spiral idea easier)<br>
+1.  The line is continuous as you would want it, but <br>
+2. because of the circling the axis can be longer than if the axis were straight, so individual notes are able .<br>
+4. It resembles the cochlea, which is awesome and makes it more thought provoking. <br>
 There is not a single example of a D3 spiral area plot, only a [spiral without data](http://bl.ocks.org/syntagmatic/3543186) and a [bar graph spiral](http://54.84.201.59/larsenmtl/222043d93a41d48b58d2bfa1e3d4f708), 
 and even that bar graph spiral is using the [spiral without data](http://bl.ocks.org/syntagmatic/3543186) as a base for its code.
 I tried to implement the spiral plot using a normal line plot, and calculating the x and y coordinates myself. This worked in Matlab, although even in Matlab it was very hard to fill in the area between the spiral and the dataline (see week 3 day 1).
@@ -129,7 +127,18 @@ Another important decision was to remove some interactivity: the gain slider and
 The microphone selection seemed downright impossible to implement in javascript. The names of the microphones could not even be retreived correctly. The chance a user has multiple microphones is small to begin with (I think), and 
 if it is the case, I've said how you can change which microphone is used in the info of program (change default recording device of your computer).
 
+I also added info buttons that print a lot of info. I think this increases the usability for the viewer a lot.
 
-When I was wondering if my idea was possible to implement I did think of a back-up project. I wanted to create a miniature solar system with the planets orbiting the sun (with orbit eccentricity perhaps? (I don't know about that)) -> click on planet: see moons of planet orbiting in new plot and athmosphere composition -> 
-Click on moon: see moon athmosphere composition. Extra option: enable planets to scale (turn all planets into little dots and even the orbits of the moons are too small to see).
+### If there was more time
 
+1. Add what the maximum ranges of the heatmap time save slider are.<br>
+2. Add labels to the stacked FFT plot (although the label next to the y-axis would have an ambiguous meaning: different octaves? or changing amplitude?)
+3. Maybe make the info area a pop-up.
+
+If there was a lot more time I would:
+
+- When the plots are paused, calculate which frequency was the most present in the sound, and print that somewhere.
+- Add interactivity between the FFT plot and the heatmap: During hover over over the FFT plot, add a vertical line in the FFT plot, and a horizontal line in the heatmap that is at the same frequency. 
+During hover over over the heatmap, add a horizontal line at the heatmap, and a vertical line at the FFT plot at the same frequency.
+- Change the color depending on the signal amplitude in the FFT plot (I couldn't find any examples of this..).
+- Add a sliding text area under the heatmap that prints the strongest frequency (above a certain threshold), this would be very hard.
