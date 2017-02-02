@@ -14,15 +14,6 @@ Frequency in Hz is be replaced by note names of musical instruments: A - G. This
 ![](doc/My_Visualisation.png)
 
 
-#### Questions the program can answer for the user.
-- How high can I sing?
-- How low can I sing?
-- Can I sing what I hear?
-- Which notes are being played (and when) in the music that I hear?
-- What is the difference in sound spectrum when comparing, guitar, flute, piano and cello for example?
-- Can I learn how to sing a particular note or note interval? (great potential for relative ear training)
-
-
 ## Technical Design
 
 Overview:
@@ -97,10 +88,6 @@ Even if the pause is activated, the FFT plot is getting (re)plotted, so the data
 
 ## Challenges
 
-When I was wondering if my idea was possible to implement I did think of a back-up project. I wanted to create a miniature solar system with the planets orbiting the sun (with orbit eccentricity perhaps? (I don't know about that)) -> click on planet: see moons of planet orbiting in new plot and athmosphere composition -> 
-Click on moon: see moon athmosphere composition. Extra option: enable planets to scale (turn all planets into little dots and even the orbits of the moons are too small to see).
-
-
 It was difficult to understand what happens in the webAudioAPI or getUserMedia. everything on the internet seems to use one example.<br>
 
 To plot the FFT results with the correct frequency and note names on the axis, I had to calculate and think of all the axis properties and values myself. There were no examples for this. I'm happy with how it turned out.
@@ -140,7 +127,7 @@ I also added info buttons that print a lot of info. I think this increases the u
 
 If there was a lot more time I would:
 
-- When the plots are paused, calculate which frequency was the most present in the sound, and print that somewhere.
+- Calculate which frequency was the most present in the sound, and print that somewhere.
 - Add interactivity between the FFT plot and the heatmap: During hover over over the FFT plot, add a vertical line in the FFT plot, and a horizontal line in the heatmap that is at the same frequency. 
 During hover over over the heatmap, add a horizontal line at the heatmap, and a vertical line at the FFT plot at the same frequency.
 - Change the color depending on the signal amplitude in the FFT plot (I couldn't find any examples of this..).
