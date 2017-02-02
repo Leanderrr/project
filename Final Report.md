@@ -106,7 +106,7 @@ To plot the FFT results with the correct frequency and note names on the axis, I
 
 The D3 plots were quite unique. <br>
 I've used the [very best and only nice D3 heatmap](https://bl.ocks.org/mbostock/3074470) I could find, luckily that one worked for me, although this example starts 
-its colormapping at position -1, this causes all color channels to be wrong (expected RGB \alpha -> got \alpha RGB). This can be seen in the WIP picture of week 2 day 4, where I already coded a black to redwhite colormap, that was misinterpreted as a white, blue, invisible colormap.<br>
+its colormapping at position -1, this causes all color channels to be wrong (expected RGB \(\alpha) -> got \alpha RGB). This can be seen in the WIP picture of week 2 day 4, where I already coded a black to redwhite colormap, that was misinterpreted as a white, blue, invisible colormap.<br>
 
 The upsides of the spiral plot in [spectratune](http://nasmusicsoft.com/Spectratune.php) are: <br>
 (1) The line is continuous as you would want it, but <br>
