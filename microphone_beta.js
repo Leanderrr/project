@@ -16,8 +16,10 @@ var nCols = 20;
 // Frequency Compression for heatmap
 var CompressTo = 400; // New array will be x pixels high, and log transformed data axis
 
+// Smoothing switch
 var smoothing = 0;
 
+// Pause: on (1) or off (0)
 var pause = 0;
 
 // Standard FFT view
@@ -42,18 +44,20 @@ function PauseChoice(){
 		pause = 0;
 	}
 }
-// Add FFT view buttons function
+// FFT view buttons function
 function FFTchoice(){
 	if (FFTview  == "linear"){
 		FFTview  = "stacked";
+		d3.selectAll(".FFT_svg").remove();
 		svg2 = init_FFT_plot_stacked(freqLims, freqBins, octaveIndexes)
 	} else {
 		FFTview  = "linear";
+		d3.selectAll(".FFT_svg").remove();
 		svg2 = init_FFT_plot_linear(freqLims, freqBins)
 	}
-	d3.selectAll(".FFT_svg").remove();
 };
 
+// Add info text to the info DIV
 function show_info(info){
 	var place = document.getElementById('infoDIV');
 	if (info == "GEN"){
@@ -90,6 +94,21 @@ for (var i = 0; i < notesN; i++){
 
 	noteNames.push(nami)
 };
+
+// Function that calculates logarithmic spacing between elements from 0 to log(max) in n steps
+function Lin2LogSpace(max, n){
+	var start = Math.log(1), // First frequency
+		stop = Math.log(max), // Stop at last frequency
+		step = (stop-start)/n,
+		freqIndexes = [start];
+	for (i = 1; i<n; i++){
+		freqIndexes.push(freqIndexes[i-1] + step);
+		freqIndexes[i-1] = Math.round(Math.exp(freqIndexes[i-1]));
+	}
+	freqIndexes[i-1] = Math.round(Math.exp(freqIndexes[i-1]));
+	return freqIndexes
+}
+	
 
 // ----------  PLOTTING FUNCTIONS -----------
 // INITIALIZE RAW SIGNAL PLOT
@@ -159,11 +178,11 @@ function init_FFT_plot_linear(Xlim, freqBins) {
 		margin = {top: 10, left: 50, bottom: 40, right: 30};
 	
 	var svg = d3.select('#FFT_plot').append('svg')
-	.attr('width',width)
-	.attr('height',height)
-	.attr('class', 'FFT_svg')
-	.attr('id','FFT_svg')
-	.append('g')
+	  .attr('width',width)
+	  .attr('height',height)
+	  .attr('class', 'FFT_svg')
+	  .attr('id','FFT_svg')
+	  .append('g')
 		.attr('id', 'FFT_canvas')
 		.attr('width', width - margin.left - margin.right)
 		.attr('height',height - margin.top - margin.bottom)
@@ -473,16 +492,8 @@ var webaudio_tooling_obj = function () {
 	
 	// Create indexes of which elements to take to create a log transformed
 	//	and compressed image of the frequency spectrum
-	var start = Math.log(1); // First frequency
-	var stop = Math.log(binCount); // Stop at last frequency
-	var step = (stop-start)/CompressTo;
-	var freqIndexes = [start];
-	for (i = 1; i<CompressTo; i++){
-		freqIndexes.push(freqIndexes[i-1] + step);
-		freqIndexes[i-1] = Math.round(Math.exp(freqIndexes[i-1]));
-	}
-	freqIndexes[i-1] = Math.round(Math.exp(freqIndexes[i-1]));
-
+	freqIndexes = Lin2LogSpace(binCount, CompressTo);
+	
 	// Calculate which element indexes are the transitions to new octaves
 	var search = 3; // Search for C's which begin at the 3th notename index
 	for (var i = 0; i < binCount; i++){
@@ -491,30 +502,12 @@ var webaudio_tooling_obj = function () {
 			search += 12; // Search for next octave
 		}
 	}
-	console.log("search ended: ", search);
-	console.log("octave indexes = ", octaveIndexes);
-	//console.log("original number of frequency bins = ", binCount);
-	//console.log("log transformed number of frequency bins = ", freqIndexes.length);
-	//console.log(freqIndexes);
-	
 	
 	// Create SVGs for plots
 	svg1 = init_raw_plot(time[time.length-1]);
-	svg2 = init_FFT_plot(freqLims, freqBins, octaveIndexes, FFTview);
+	svg2 = init_FFT_plot_linear(freqLims, freqBins);
 	svg3 = init_FFT_heat_plot(nCols, freqLims);
 	
-	
-    // Print some stuff
-	//console.log("number of notes in octave: " + octaveLength);
-	console.log(noteFreqs);
-	//console.log(noteNames);
-	//console.log("interval = " + interval)
-	console.log(freqBins)
-	//console.log(freqIndexes)
-	//console.log("buffer size   = " + BUFF_SIZE);
-	//console.log("buffer length = " + Math.round(time[time.length-1]) + " ms");
-	//console.log("sample rate   = " + sRate + " Hz")
-    
 	var audioInput = null,
     microphone_stream = null,
     gain_node = null,
@@ -617,10 +610,13 @@ var webaudio_tooling_obj = function () {
 				freq_matrix.push(image_slice); // Add new freq data
 
 				// draw the plots	
-				//plot_line(array_freq, 1,'frequency');
-				plot_line(time, array_time_signal); // Plot the raw input
-				plot_FFT(freqBins, array_freq, octaveIndexes, FFTview); // Plot the FFT results
+				plot_line(time, array_time_signal);
 				plot_heatmap(freq_matrix, nCols, nBins);
+				if (FFTview == "stacked"){
+					plot_FFT_stacked(freqBins, array_freq, octaveIndexes);
+				} else {
+					plot_FFT_linear(freqBins, array_freq);
+				}
 			}
 		};
     }
