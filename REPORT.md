@@ -1,8 +1,10 @@
+# Project Report
 
 > Name: Leander de Kraker<br>
 > Stnr: 10423354<br>
 > Date: 2017-2-2<br>
 
+## Program description
 
 The program uses the user's microphone to visualise the sound signal of the microphone. 
 It also applies a Fast Fourier Transformation (FFT), this shows the user which sound frequencies are present in the sound. 
@@ -110,6 +112,7 @@ its colormapping at position -1, this causes all color channels to be wrong (exp
 The upsides of the spiral plot in [spectratune](http://nasmusicsoft.com/Spectratune.php) are: <br>
 1.  The line is continuous as you would want it, but <br>
 2. because of the circling the axis can be longer than if the axis were straight, so individual notes are able .<br>
+3. The same note is always on the same degree (the lines with notenames could extend from the centre straight outward); one octave is exactly one spiral rotation.<br>
 4. It resembles the cochlea, which is awesome and makes it more thought provoking. <br>
 There is not a single example of a D3 spiral area plot, only a [spiral without data](http://bl.ocks.org/syntagmatic/3543186) and a [bar graph spiral](http://54.84.201.59/larsenmtl/222043d93a41d48b58d2bfa1e3d4f708), 
 and even that bar graph spiral is using the [spiral without data](http://bl.ocks.org/syntagmatic/3543186) as a base for its code.
