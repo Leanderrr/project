@@ -119,10 +119,10 @@ h1{
 }
 
 #FFTviewSwitch:before{
-	content: "Stacked view";
+	content: "Linear view";
 }
 #FFTviewSwitch:after{
-	content: "Linear view";
+	content: "Stacked view";
 }
 #buttonPause:before{
     background-color: #A03535; color: ;

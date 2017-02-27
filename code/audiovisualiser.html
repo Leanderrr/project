@@ -1,0 +1,142 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Sound Visualiser</title>
+</head>
+
+
+
+<body>
+	<div id="General_info" style="visibility:hidden; height: 0px">
+		The Sound visualiser uses your microphone to record sound, and then plot it!<br> 
+		It will show the sound waveform and what musical notes are present in the sound.<br><br>
+		If you do not have a microphone you could download software like VB-audio virtual cable to use your computer sound as input. 
+		This is also a lossless way of analyzing music on your computer<br>
+		If the wrong microphone is selected, change it via 'sound' on windows and switch the default recording device.<br><br>
+		Fun experiments:
+		<ul>
+		  <li>Try to sing as high or as low as someone else</li>
+		  <li>Wistle (wistling produces a pure sinus, unlike other instruments or singing)</li>
+		  <li>try to sing certain intervals (use stacked frequency view to see specific notes)</li>
+		  <li>Look at how the overtones change when you close or open your mouth while singing</li>
+		  <li>See which overtones appear when hitting a single note</li>
+		</ul>
+		
+		Additional info on musical sound analysis:  <a href="http://nasmusicsoft.com/Spectratune.php">Spectratune</a>
+		
+	</div>
+	<p id="raw_info" style="visibility:hidden; height: 0px">
+		
+		The <b>raw signal plot</b> shows the recorded sound signal through time.<br>
+		The devation from 0 is caused by the pressure of the sound waves. The further from 0 the peaks of the sound, the louder the sound is.<br>
+		Higher frequency sound has shorter wavelengths, so more cycles will be visible in the plot when high frequency sound is present.<br>
+		What the amplitude is exactly does not mean a lot (this is not a dB meter), because each microphone has a different gain.<br><br>
+		When the signal does not look like a nice sinus the sound is composed of sinusses of different frequencies, the frequency plot shows the amplitude of each sinus.
+	</p>
+	<p id="FFT_info" style="visibility:hidden; height: 0px; font-size:0px;">
+		The <b>frequency plot</b> shows the signal of the raw signal plot, transformed with Fast Fourier Transform (FFT), 
+		this reveals which frequencies are present in the sound.<br><br>
+		Different frequencies are plotted on the x-axis, the y-axis shows the intensity of a frequency.<br>
+		The labels and ticks on the x-axis are musical notes with standard tuning.
+		The x-axis increases logarithmically, that is why the notes have equal distance from each other (amount of Hz between notes increases exponentially ~5,9% (12th root of 2) each half step).<br><br>
+		
+		- Stacked view plots octaves above each other instead of next to each other. This increases the space between different notes. So now you can see exactly which notes are being played!
+		The octave with the highest frequencies is plotted at the top<br><br>
+		- Smoothing takes an average with the previous FFT results, filtering out a bit of noise and quick sounds. This also effects the heatmap.
+	</p>
+	<p id="HEAT_info" style="visibility:hidden; height: 0px; font-size:0px;">
+		This <b>frequency heatmap</b> shows the same data as the linear sound frequency plot.
+		But now multiple FFT results are plotted. Instead of on the x-axis, the frequency now increases on the y-axis. Instead of being displayed on the y-axis, the intensity of a frequency changes the brightness on the heatmap.
+		Bright colored pixels mean that frequency is present at that time a lot. The latest FFT results appear at the right side of the heatmap (t=0), it then shifts into the past.<br><br>
+		You can change the amount of time displayed on the heatmap with the slider. Saving a lot of time can cause lower frames per second.<br><br>
+		In music hitting one note can create several frequencies, the strongest frequency, which is often the lowest frequency, is the keytone. Other frequencies are overtones, overtones 
+		give the instrument its characteristic sound. Common overtimes are octaves and quints above the keynote: hitting C3 will also cause C4, G4 and C5 etc to ring.
+
+	</p>
+
+	<header><h1>
+		Sound Visualiser
+		<a class="info" style="float:right;" onclick='show_info("GEN")'><img src="small_info_icon.png"/></a>
+	</h1></header>
+
+	
+	<div class="container">
+		<div class="subcontainer" style="width:600px; float: left;">
+			<div class="optioncontainer" style="height: 150px">
+				<div class="onoffswitch">
+					<input type="checkbox" class="onoffswitch-checkbox" id="FFTviewInput" onclick='FFTchoice()'>
+					<label class="onoffswitch-label" for="FFTviewInput">
+						<span  id="FFTviewSwitch" class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>
+				<br>
+				<div class="onoffswitch">
+					<input type="checkbox" class="onoffswitch-checkbox" id="pauseInput" onclick='pauseChoice()'>
+					<label class="onoffswitch-label" for="pauseInput">
+						<span id="buttonPause" class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>
+				
+				<br>
+				<div class="onoffswitch">
+					<input type="checkbox" class="onoffswitch-checkbox" id="smoothingInput" onclick='smoothingToggle()'>
+					<label class="onoffswitch-label" for="smoothingInput">
+						<span id="smoothingSwitch" class="onoffswitch-inner"></span>
+						<span class="onoffswitch-switch"></span>
+					</label>
+				</div>
+			</div>
+			<p class="title">Sound frequency
+				<a class="info"  style="float:right;" onclick='show_info("FFT")'><img src="small_info_icon.png"/></a>
+			</p>
+			
+			<div id="FFT_DIV" style='width: 600px; height: 450px;'>
+				<div id="FFT_plot"></div>
+			</div>
+			
+		</div>
+
+		<div class="subcontainer" style="width:600px; float:right;">
+			<div class="optioncontainer" style="height: 150px">
+				<span>
+				12<input id="historyLength" type="range" min="12" max="49" step="1" value="20"/>49 Saved time
+				</span><br>
+				<span>
+				-2<input id="gainslider" type="range" min="-2" max="1" step="0.05" value="0.5"/>1 (unaltered): gain
+				</span>
+			</div>
+			<p class="title">Sound frequency through time
+				<a class="info" style="float:right;" onclick='show_info("HEAT")'><img src="small_info_icon.png"/></a>
+			</p>
+			
+			<div id="heatmap_DIV" style='width: 600px; height: 450px;'>
+				 <div id="heatmap_axis"></div>
+				 <div id="heatmap_canvas"></div>
+			</div>
+		</div>
+
+	</div>
+	<div class="container">	
+		<div class="subcontainer" style="width:600px; height: 300px; float: left;">
+			<p class="title">Sound raw signal
+				<a class="info" style="float:right;" onclick='show_info("RAW")'><img src="small_info_icon.png"/></a>
+			</p>
+			
+			<div id="raw_plot"></div>
+			
+		</div>
+		<div class="subcontainer" style="width:600px; height: 300px; float:right; overflow:scroll">
+			<p class="title">Info
+			</p>
+			<div id="infoDIV" style="width:95%; margin:auto; height: 218px;"></div>
+		</div>
+	</div>
+	
+
+	<link rel="stylesheet" type="text/css" href="audiovisualiser.css"/>
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<script src="audiovisualiser.js"></script>
+</body>
+</html>

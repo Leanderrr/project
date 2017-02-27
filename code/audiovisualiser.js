@@ -22,11 +22,24 @@ var smoothing = 0;
 // Pause: on (1) or off (0)
 var pause = 0;
 
+// Gain slider gain works as finalvalue = inputvalue * (1+gain) - zeroer
+var gain = 1;
+// variable that makes sure 0 in the freq data always is 0
+var zeroer = 0;
+
 // Standard FFT view
-var FFTview = "linear",
+var FFTview = "stacked",
 	freqBins = [],
 	octaveIndexes = [];
 
+// Function for gain
+document.getElementById('gainslider').addEventListener('change', function(){
+	gain = this.value;
+	zeroer = (1-gain)*255;
+	if (zeroer<0) {zeroer = 0}
+	console.log(gain);
+})
+	
 // Add function for smoothing
 function smoothingToggle(){
 	if (smoothing == 0){
@@ -188,7 +201,7 @@ function init_FFT_plot_linear(Xlim, freqBins) {
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	
 	var xScale = d3.scale.log().domain(Xlim).range([0, width - margin.left - margin.right]);
-	var	yScale = d3.scale.linear().domain([1, 200]).range([height - margin.top - margin.bottom, 0]);
+	var	yScale = d3.scale.linear().domain([1, 255]).range([height - margin.top - margin.bottom, 0]);
 
 	// Axis properties
 	var xAxis = d3.svg.axis()
@@ -376,7 +389,15 @@ function redraw_FFT_heat_plot(xMax){
 	svg3 = init_FFT_heat_plot(nCols, freqLims);
 }
 
-
+// Change for freq value based on gain
+function gainer(value){
+	var out = value*(1+(1-gain)) - zeroer;
+	if (out<0){
+		return 0
+	} else {
+	return out
+	}
+}
 // --------- PLOT UPDATING/ DRAWING FUNCTIONS ---------------
 // Plot the raw input
 function plot_line(time, given_typed_array){
@@ -385,7 +406,7 @@ function plot_line(time, given_typed_array){
 			return svg1.xScale(time[i])
 		})
 		.y(function(d, i) {
-			return svg1.yScale(given_typed_array[i]-(256/2))
+			return svg1.yScale((given_typed_array[i]-(256/2))/(1+(1-gain)))
 		})
 		svg1.svg.select("#raw_line").remove()
 		svg1.svg.append("path")
@@ -405,7 +426,7 @@ function plot_FFT_linear(freq_bins, freq_values){
 	.y0(svg2.height-svg2.margin.bottom-svg2.margin.top)
 	.y1(function(d, i) {
 		//console.log(freq_values[i])
-		vali = freq_values[i]-80
+		vali = gainer(freq_values[i])
 		if (vali < 0){
 			return(svg2.height-svg2.margin.bottom-svg2.margin.top)}
 		else{
@@ -431,7 +452,7 @@ function plot_FFT_stacked(freq_bins, freq_values, octaveIndexes){
 		})
 		.y0(svg2.height-svg2.margin.top)
 		.y1(function(d, j){
-			vali = valuesi[j]-80
+			vali = gainer(valuesi[j])
 			if (vali < 0){
 				return(svg2.height-svg2.margin.top)}
 				
@@ -503,7 +524,7 @@ var webaudio_tooling_obj = function () {
 	
 	// Create SVGs for plots
 	svg1 = init_raw_plot(time[time.length-1]);
-	svg2 = init_FFT_plot_linear(freqLims, freqBins);
+	svg2 = init_FFT_plot_stacked(freqLims, freqBins, octaveIndexes);
 	svg3 = init_FFT_heat_plot(nCols, freqLims);
 
 	// Set the user media version for different browsers
@@ -583,7 +604,7 @@ var webaudio_tooling_obj = function () {
 					} else {
 						analyser_node.getByteFrequencyData(smoothing_array);
 						for (var i = 0; i<smoothing_array.length; i++){
-							array_freq[i] = ((array_freq[i] + smoothing_array[i])/ 2);
+							array_freq[i] = (array_freq[i] + smoothing_array[i])/ 2;
 						}
 					}
 					
