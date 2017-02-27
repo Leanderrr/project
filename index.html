@@ -13,6 +13,9 @@
 		If you do not have a microphone you could download software like VB-audio virtual cable to use your computer sound as input. 
 		This is also a lossless way of analyzing music on your computer<br>
 		If the wrong microphone is selected, change it via 'sound' on windows and switch the default recording device.<br><br>
+		
+		Made by: Leander de Kraker <br><br>
+		
 		Fun experiments:
 		<ul>
 		  <li>Try to sing as high or as low as someone else</li>
@@ -62,7 +65,7 @@
 	
 	<div class="container">
 		<div class="subcontainer" style="width:600px; float: left;">
-			<div class="optioncontainer" style="height: 100px">
+			<div class="optioncontainer" style="height: 150px">
 				<div class="onoffswitch">
 					<input type="checkbox" class="onoffswitch-checkbox" id="FFTviewInput" onclick='FFTchoice()'>
 					<label class="onoffswitch-label" for="FFTviewInput">
@@ -99,9 +102,13 @@
 		</div>
 
 		<div class="subcontainer" style="width:600px; float:right;">
-			<div class="optioncontainer" style="height: 100px">
-				<p>Saved time</p>
-				<p>10<input id="historyLength" type="range" min="10" max="50" step="1" value="20"/>50 columns</p>
+			<div class="optioncontainer" style="height: 150px">
+				<span>
+				12<input id="historyLength" type="range" min="12" max="49" step="1" value="20"/>49 Saved time
+				</span><br>
+				<span>
+				-2<input id="gainslider" type="range" min="-2" max="1" step="0.05" value="0.5"/>1 (unaltered): gain
+				</span>
 			</div>
 			<p class="title">Sound frequency through time
 				<a class="info" style="float:right;" onclick='show_info("HEAT")'><img src="code/small_info_icon.png"/></a>
