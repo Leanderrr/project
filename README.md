@@ -1,5 +1,10 @@
 # Sound Visualiser
 
+## use via: https://leanderrr.github.io/project/
+
+>> Name: Leander de Kraker<br>
+>> Stnr: 10423354<br>
+>> Date: 2017-2-2<br>
 
 >Permission is hereby granted, free of charge, to any person obtaining a copy
 >of this software and associated documentation files (the "Sound Visualiser"), to deal
@@ -19,16 +24,12 @@
 >OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 >SOFTWARE.
 
-> Name: Leander de Kraker<br>
-> Stnr: 10423354<br>
-> Date: 2017-2-2<br>
-
 
 #### Description
 
-The program uses the user's microphone to visualise the sound signal of the microphone. 
+The program uses the user's microphone to visualise the sound signal of the microphone live. 
 It also applies a Fast Fourier Transformation (FFT), this shows the user which sound frequencies are present in the sound. 
-Frequency in Hz is be replaced by note names of musical instruments: A - G. This enables the user to see what notes are being played in music easily.
+Frequency in Hz is replaced by note names of musical instruments: A - G. This enables the user to easily see what notes are being played in music.
 
 
 ![](doc/My_Visualisation.png)
@@ -50,5 +51,5 @@ RealTimeSpectro also accesses the microphone and implements a row and spiral vis
 Another program by Norm Spier, [SpectraTunePlus](http://nasmusicsoft.com/Spectratune.php "SpectraTunePlus info"). is able to load sound files and shows a frequency spectrum history. [SpectraTunePlus](http://nasmusicsoft.com/Spectratune.php "SpectraTunePlus info") has a more intimidating user interface.
 Norm Spier has written a lot of helpful theoretical, practical and nice-to-know information on his website.
 
-[Sonic visualiser](http://sonicvisualiser.org/ "another sound visualizer program") is another program which is a bit similar to my project's program. This program can only handly complete audio files.
+[Sonic visualiser](http://sonicvisualiser.org/ "another sound visualizer program") is another program which is a bit similar to my project's program. This program can only handle complete audio files.
 

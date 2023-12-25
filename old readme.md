@@ -1,5 +1,5 @@
 # Project
-
+## https://leanderrr.github.io/project/
 > Name: Leander de Kraker<br>
 > Stnr: 10423354<br>
 > Date: 2017-1-9<br>
@@ -15,7 +15,7 @@ Possible examples of storytelling: <br>
 - I can produce higher pitched sound if I scream loudly (interesting).<br>
 - That girl can sing higher notes than her boyfriend.<br>
 - That person does not sing the notes that the main instruments plays, but it does not sound bad -> That person is playing in the same scale.<br>
-- The cello uses vibrato and that changes the pitch of the sound, piano does not change pitch over time.
+- The cello uses vibrato, which changes the pitch of the sound, piano does not change pitch over time.
 The best vibrato oscillates 4 times per second, but on average just a bit lower than the desired frequency.<br>
 - Multiple tones are present in the sound even when only one piano key is being played!<br>
 - If I try to increase my pitch, my voice skips a couple of notes. <br>
@@ -29,7 +29,6 @@ The best vibrato oscillates 4 times per second, but on average just a bit lower 
 - What is the difference in sound spectrum when comparing, guitar, flute, piano and cello for example?
 - Is my guitar in tune?
 - Can I learn how to sing a particular note or note interval? (great potential for relative ear training)
-- How does my basilar membrane vibrate (roughly) when there is sound?
 
 
 #### Available features in program.
